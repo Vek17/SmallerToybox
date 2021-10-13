@@ -172,7 +172,6 @@
     <Compile Include="classes\MainUI\Etudes\ReferenceGraph.cs" />
     <Compile Include="classes\MainUI\FeaturesTreeEditor.cs" />
     <Compile Include="classes\MainUI\PhatLoot.cs" />
-    <Compile Include="classes\MainUI\MulticlassPicker.cs" />
     <Compile Include="classes\MainUI\LevelUp.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintAction.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
@@ -190,7 +189,6 @@
     <Compile Include="classes\MainUI\QuestEditor.cs" />
     <Compile Include="classes\MainUI\PartyEditor.cs" />
     <Compile Include="classes\Infrastructure\RespecHelper.cs" />
-    <Compile Include="classes\Models\Settings+Multiclass.cs" />
     <Compile Include="classes\Models\Settings+UI.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Alignment.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\Actions.cs" />
@@ -214,13 +212,6 @@
     <Compile Include="classes\MonkeyPatchin\HighlightObjectToggle.cs" />
     <Compile Include="classes\MonkeyPatchin\ModUI.cs" />
     <Compile Include="classes\MonkeyPatchin\MoveThroughOthers.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\LevelUP+Multiclass.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\MulticlassMod.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\MultipleClasses.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\HP.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SavesBAB.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\StatProgression\SkillPoint.cs" />
-    <Compile Include="classes\MonkeyPatchin\Multiclass\WrathExtensionsMulticlass.cs" />
     <Compile Include="classes\MonkeyPatchin\PartyView.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewManager.cs" />
     <Compile Include="classes\MonkeyPatchin\PreviewUtilities.cs" />
@@ -263,7 +254,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

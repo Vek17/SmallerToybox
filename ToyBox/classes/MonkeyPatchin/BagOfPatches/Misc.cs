@@ -50,29 +50,10 @@ using Kingmaker.UI._ConsoleUI.CombatStartScreen;
 using Kingmaker.Items.Slots;
 using ModKit;
 using Kingmaker.EntitySystem.Persistence;
-using ToyBox.Multiclass;
-
 namespace ToyBox.BagOfPatches {
     internal static class Misc {
         public static Settings settings = Main.settings;
         public static Player player = Game.Instance.Player;
-
-        [HarmonyPatch(typeof(Player), nameof(Player.OnAreaLoaded))]
-        internal static class Player_OnAreaLoaded_Patch {
-            private static void Postfix() {
-                Mod.Debug("Player_OnAreaLoaded_Patch");
-                Settings.ClearCachedPerSave();
-                MultipleClasses.SyncAllGestaltState();
-            }
-        }
-
-        [HarmonyPatch(typeof(SaveManager), nameof(SaveManager.SaveRoutine))]
-        internal static class SaveManager_SaveRoutine_Patch {
-            private static void Postfix() {
-                Mod.Log("SaveManager_SaveRoutine_Patch");
-                Settings.SavePerSaveSettings();
-            }
-        }
 
         public static BlueprintAbility ExtractSpell([NotNull] ItemEntity item) {
             var itemEntityUsable = item as ItemEntityUsable;

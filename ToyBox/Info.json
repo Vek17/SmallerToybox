@@ -1,8 +1,8 @@
 ﻿{
     "Id": "ToyBox",
-    "DisplayName": "ToyBox (a bag of tricks)",
+    "DisplayName": "A Smaller Toybox",
     "Author": "Narria",
-    "Version": "1.4.2",
+    "Version": "1.0.0",
     "ManagerVersion": "0.23.0",
     "Requirements": [],
     "AssemblyName": "ToyBox.dll",

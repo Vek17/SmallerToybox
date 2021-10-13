@@ -47,6 +47,7 @@ using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.RuleSystem.Rules.Abilities;
 using UnityEngine;
 using Kingmaker.EntitySystem.Stats;
+using Kingmaker.Enums;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {

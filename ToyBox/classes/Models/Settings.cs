@@ -14,62 +14,8 @@ using JetBrains.Annotations;
 using Kingmaker.EntitySystem.Persistence;
 
 namespace ToyBox {
-    public class PerSaveSettings : EntityPart {
-        public const string ID = "ToyBox.PerSaveSettings";
-
-        // schema for storing multiclass settings
-        //      Dictionary<CharacterName, 
-        //          Dictionary<ClassID, HashSet<ArchetypeIDs>
-        // For character gen config we use the following special key:
-        [JsonProperty]
-        public Dictionary<string, MulticlassOptions> multiclassSettings = new();
-
-        // This is the set of classes that each char has leveled up under multi-class.  They will be excluded from char level calculations
-        [JsonProperty]
-        public Dictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new();
-
-        // Dictionary of Name/IsLegendaryHero for configuration per party member
-        [JsonProperty]
-        public Dictionary<string, bool> charIsLegendaryHero = new();
-    }
 
     public class Settings : UnityModManager.ModSettings {
-        private static PerSaveSettings cachedPerSave = null;
-        public const string PerSaveKey = "ToyBox";
-        public static void ClearCachedPerSave() => cachedPerSave = null;
-        public static void ReloadPerSaveSettings() {
-            var player = Game.Instance?.Player;
-            if (player == null || Game.Instance.SaveManager.CurrentState == SaveManager.State.Loading) return;
-            Mod.Debug($"reloading per save settings from Player.SettingsList[{PerSaveKey}]");
-            if (player.SettingsList.TryGetValue(PerSaveKey, out var obj) && obj is string json) {
-                cachedPerSave = JsonConvert.DeserializeObject<PerSaveSettings>(json);
-                Mod.Debug($"read successfully from Player.SettingsList[{PerSaveKey}]");
-            }
-            if (cachedPerSave == null) {
-                Mod.Warn("per save settings not found, creating new...");
-                cachedPerSave = new PerSaveSettings {
-                };   
-                SavePerSaveSettings();
-            }
-        }
-        public static void SavePerSaveSettings() {
-            var player = Game.Instance?.Player;
-            if (player == null) return;
-            if (cachedPerSave == null)
-                ReloadPerSaveSettings();
-            var json = JsonConvert.SerializeObject(cachedPerSave);
-            player.SettingsList[PerSaveKey] = json;
-            Mod.Debug($"saved to Player.SettingsList[{PerSaveKey}]");
-            Mod.Trace($"multiclass options: {string.Join(" ", cachedPerSave.multiclassSettings)}");
-        }
-        public PerSaveSettings perSave{
-            get {
-                if (cachedPerSave != null) return cachedPerSave;
-                ReloadPerSaveSettings();
-                return cachedPerSave;
-            }
-        }
-
         // Main
         public int selectedTab = 0;
 
@@ -192,7 +138,6 @@ namespace ToyBox {
         public bool toggleUncappedCasterLevel = false;
 
         // Multipliers
-        public int featsMultiplier = 1;
         public int encumberanceMultiplier = 1;
         public float experienceMultiplier = 1;
         public float moneyMultiplier = 1;
@@ -278,43 +223,6 @@ namespace ToyBox {
 
         // Quests
         public bool hideCompleted = true;
-
-        // Multi-Class 
-        public bool toggleMulticlass = false;   // big switch - TODO - do we need this?
-        public bool toggleMulticlassShowClassDescriptions = false;
-        public bool toggleAlwaysShowMigration = false;
-        public int selectedClassToConfigMulticlass = 0;
-
-        // schema for storing multiclass settings
-        //      Dictionary<CharacterName, 
-        //          Dictionary<ClassID, HashSet<ArchetypeIDs>
-        // For character gen config we use the following special key:
-        public SerializableDictionary<string, MulticlassOptions> multiclassSettings = new();
-
-        // This is the set of classes that each char has leveled up under multi-class.  They will be excluded from char level calculations
-        public SerializableDictionary<string, HashSet<string>> excludeClassesFromCharLevelSets = new();
-
-        // Dictionary of Name/IsLegendaryHero for configuration per party member
-        public SerializableDictionary<string, bool> charIsLegendaryHero = new();
-
-        public Multiclass.ProgressionPolicy multiclassHitPointPolicy = 0;
-        public Multiclass.ProgressionPolicy multiclassSavingThrowPolicy = 0;
-        public Multiclass.ProgressionPolicy multiclassBABPolicy = 0;
-        public Multiclass.ProgressionPolicy multiclassSkillPointPolicy = 0;
-
-
-        public bool toggleTakeHighestHitDie = true;
-        public bool toggleTakeHighestSkillPoints = true;
-        public bool toggleTakeHighestBAB = true;
-        public bool toggleTakeHighestSaveByRecalculation = true;
-        public bool toggleTakeHighestSaveByAlways = false;
-        public bool toggleRecalculateCasterLevelOnLevelingUp = true;
-        public bool toggleRestrictCasterLevelToCharacterLevel = true;
-        public bool toggleRestrictCasterLevelToCharacterLevelTemporary = false;
-        public bool toggleRestrictClassLevelForPrerequisitesToCharacterLevel = true;
-        public bool toggleFixFavoredClassHP = false;
-        public bool toggleAlwaysReceiveFavoredClassHPExceptPrestige = true;
-        public bool toggleAlwaysReceiveFavoredClassHP = false;
 
         // these are useful and belong in Char Generation
         public bool toggleIgnoreAlignmentRestrictionCharGen = false;    // was called toggleIgnoreAlignmentRestriction in Multi-Class mod

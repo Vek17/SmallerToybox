@@ -3,7 +3,6 @@ using System.Linq;
 using Kingmaker;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
-using ToyBox.Multiclass;
 
 namespace ToyBox {
     public class LevelUp {
@@ -42,11 +41,6 @@ namespace ToyBox {
                 );
             UI.Div(0, 25);
             UI.HStack("Create & Level Up", 1,
-                () => {
-                    UI.Slider("Feature Selection Multiplier", ref settings.featsMultiplier, 0, 10, 1, "", UI.Width(600));
-                    UI.Space(25);
-                    UI.Label("This allows you to select a given feature more than once at level up".green());
-                },
                 () => UI.Toggle("Enable  'Next' when no feat selections are available", ref settings.toggleNextWhenNoAvailableFeatSelections),
                 () => UI.Toggle("Make All Feature Selections Optional", ref settings.toggleOptionalFeatSelection),
                 () => {
@@ -91,30 +85,6 @@ namespace ToyBox {
                 () => { }
                 );
 #if true
-            UI.Div(0, 25);
-            UI.HStack("Multiple Classes", 1,
-                //() => UI.Label("Experimental Preview".magenta(), UI.AutoWidth()),
-                () => {
-                    UI.Toggle("Multiple Classes On Level-Up", ref settings.toggleMulticlass);
-                    UI.Space(25);
-                    using (UI.VerticalScope()) {
-                        UI.Label("Experimental - With this enabled you can configure characters in the Party Editor to gain levels in additional classes whenever they level up. See the link for more information on this campaign variant.".green());
-                        UI.LinkButton("Gestalt Characters", "https://www.d20srd.org/srd/variant/classes/gestaltCharacters.htm");
-                        UI.Space(15);
-                    }
-                },
-                () => {
-                    UI.EnumGrid<ProgressionPolicy>("Hit Point (Hit Die) Growth", ref settings.multiclassHitPointPolicy, 0, UI.AutoWidth());
-                },
-                () => {
-                    UI.EnumGrid<ProgressionPolicy>("Basic Attack Growth Pr", ref settings.multiclassBABPolicy, 0, UI.AutoWidth());
-                },
-                () => {
-                    UI.EnumGrid<ProgressionPolicy>("Saving Throw Growth", ref settings.multiclassSavingThrowPolicy, 0, UI.AutoWidth());
-                },
-                () => {
-                    UI.EnumGrid<ProgressionPolicy>("Skill Point Growth", ref settings.multiclassSkillPointPolicy, 0, UI.AutoWidth());
-                },
 #if false
                 () => UI.Toggle("Use Recalculate Caster Levels", ref settings.toggleRecalculateCasterLevelOnLevelingUp),
                 () => UI.Toggle("Restrict Caster Level To Current", ref settings.toggleRestrictCasterLevelToCharacterLevel),
@@ -124,33 +94,6 @@ namespace ToyBox {
                 () => UI.Toggle("Always Receive Favored Class HP", ref settings.toggleAlwaysReceiveFavoredClassHP),
                 () => UI.Toggle("Always Receive Favored Class HP Except Prestige", ref settings.toggleAlwaysReceiveFavoredClassHPExceptPrestige),
 #endif
-                () => { }
-                );
-
-            if (settings.toggleMulticlass) {
-                UnitEntityData selectedChar = null;
-                UI.Div(0, 25);
-                UI.HStack("Class Selection", 1,
-                     () => {
-                         if (Main.IsInGame) {
-                             var characters = Game.Instance.Player.m_PartyAndPets;
-                             if (characters == null) { return; }
-                             settings.selectedClassToConfigMulticlass = Math.Min(characters.Count, settings.selectedClassToConfigMulticlass);
-                             UI.ActionSelectionGrid(ref settings.selectedClassToConfigMulticlass,
-                                 characters.Select((ch) => ch.CharacterName).Prepend("Char Gen").ToArray(),
-                                 6,
-                                 (index) => { },
-                                 UI.AutoWidth()
-                                 );
-                             if (settings.selectedClassToConfigMulticlass <= 0) selectedChar = null;
-                             else selectedChar = characters[settings.selectedClassToConfigMulticlass - 1];
-                         }
-                     },
-                     () => { }
-                 );
-
-                MulticlassPicker.OnGUI(selectedChar, 150);
-            }
 #endif
         }
     }

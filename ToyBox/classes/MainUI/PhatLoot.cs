@@ -4,7 +4,6 @@ using UnityEngine;
 using Kingmaker;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
-using ToyBox.Multiclass;
 
 namespace ToyBox {
     public class PhatLoot {

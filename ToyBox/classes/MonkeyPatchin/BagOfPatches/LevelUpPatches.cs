@@ -38,30 +38,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(UnitProgressionData))]
-        private static class UnitProgressionData_LegendaryHero_Patch {
-            [HarmonyPatch("ExperienceTable", MethodType.Getter)]
-            private static void Postfix(ref BlueprintStatProgression __result, UnitProgressionData __instance) {
-                settings.perSave.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
-                //Mod.Trace($"UnitProgressionData_ExperienceTable - {__instance.Owner.CharacterName.orange()} isFakeLegoHero:{isFakeLegendaryHero}");
-                var legendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
-                __result = !legendaryHero
-                        ? Game.Instance.BlueprintRoot.Progression.XPTable
-                        : Game.Instance.BlueprintRoot.Progression.LegendXPTable.Or(null)
-                          ?? Game.Instance.BlueprintRoot.Progression.XPTable;
-            }
-
-            [HarmonyPatch("MaxCharacterLevel", MethodType.Getter)]
-            private static void Postfix(ref int __result, UnitProgressionData __instance) {
-                settings.perSave.charIsLegendaryHero.TryGetValue(__instance.Owner.HashKey(), out var isFakeLegendaryHero);
-                //Mod.Trace ($"UnitProgressionData_MaxCharacterLevel - {__instance.Owner.CharacterName.orange()} isFakeLegoHero:{isFakeLegendaryHero}");
-                var isLegendaryHero = __instance.Owner.State.Features.LegendaryHero || isFakeLegendaryHero;
-                if (isLegendaryHero) {
-                    __result = 40;
-                }
-            }
-        }
-
         [HarmonyPatch(typeof(UnitProgressionData), nameof(UnitProgressionData.AddClassLevel))]
         public static class UnitProgressionData_AddClassLevel_Patch {
             private static readonly MethodInfo UnitProgressionData_GetExperienceTable =
@@ -450,7 +426,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleOptionalFeatSelection) {
                     __result = true;
                 }
-                else if (settings.toggleNextWhenNoAvailableFeatSelections || settings.featsMultiplier != 1) {
+                else if (settings.toggleNextWhenNoAvailableFeatSelections) {
                     var featureSelectorStateVM = __instance.FeatureSelectorStateVM;
                     var selectionState = featureSelectorStateVM.SelectionState;
                     var selectionVM = __instance.FeatureSelectorStateVM;
@@ -512,48 +488,6 @@ namespace ToyBox.BagOfPatches {
         //}
 
 #else
-        /**
-         * The feat multiplier is the source of several hard to track down bugs. To quote ArcaneTrixter:
-         * All story companions feats/backgrounds/etc. most notably a certain wizard who unlearns how to cast spells if your multiplier is at least 8. Also this is retroactive if you ever level up in the future with the multiplier on.
-         * All mythic 'fake' companions like Skeleton Minion for lich or Azata summon.
-         * Required adding in "skip feat selection" because it broke level ups.
-         * Causes certain gestalt combinations to give sudden ridiculous level-ups of companions or sneak attack or kinetic blast.
-        */
-        [HarmonyPatch(typeof(LevelUpHelper), "AddFeaturesFromProgression")]
-        public static class MultiplyFeatPoints_LevelUpHelper_AddFeatures_Patch {
-            public static bool Prefix(
-                [NotNull] LevelUpState state,
-                [NotNull] UnitDescriptor unit,
-                [NotNull] IList<BlueprintFeatureBase> features,
-                FeatureSource source,
-                int level) {
-                if (settings.featsMultiplier < 2) return true;
-                //Main.Log($"name: {unit.CharacterName} isMemberOrPet:{unit.IsPartyMemberOrPet()}".cyan().bold());
-                if (!unit.IsPartyOrPet()) return true;
-                Mod.Trace($"Log adding {settings.featsMultiplier}x features from {source.Blueprint.name.orange()} : {source.Blueprint.GetType().Name.yellow()} for {unit.CharacterName.green()} {string.Join(", ", state.Selections.Select(s => $"{s.Selection}")).cyan()}");
-                foreach (var featureBP in features.OfType<BlueprintFeature>()) {
-                    Mod.Trace($"    checking {featureBP.NameSafe().cyan()} : {featureBP.GetType().Name.yellow()}");
-                    var multiplier = settings.featsMultiplier;
-                    for (var i = 0; i < multiplier; ++i) {
-                        if (featureBP.MeetsPrerequisites(null, unit, state, true)) {
-                            if (featureBP is IFeatureSelection selection && (!selection.IsSelectionProhibited(unit) || selection.IsObligatory())) {
-                                Mod.Trace($"    adding: {featureBP.NameSafe().cyan()}".orange());
-                                state.AddSelection(null, source, selection, level);
-                            }
-                        }
-                    }
-                    var feature = (Kingmaker.UnitLogic.Feature)unit.AddFact(featureBP);
-                    var source1 = source;
-                    var level1 = level;
-                    feature.SetSource(source1, level1);
-                    if (featureBP is BlueprintProgression progression) {
-                        Mod.Trace($"    updating unit: {unit.CharacterName.orange()} {progression} bp: {featureBP.NameSafe()}".cyan());
-                        LevelUpHelper.UpdateProgression(state, unit, progression);
-                    }
-                }
-                return false;
-            }
-        }
         /**
          * This alternative re-targets the multiplier into a Postfix instead of a Prefix to reduce the patch foot print, as well as adds progression white listing to make feature multiplication opt in by the developer instead of just multiplying everything always. As setup in this request only the base feat selections that all characters get will be multiplied, which to my mind best suits the name and description of what this setting does. This should also significantly reduce or resolve several associated bugs due to the reduction of scope on this feature
          */

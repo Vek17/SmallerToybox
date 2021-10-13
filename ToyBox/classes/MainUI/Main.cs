@@ -10,7 +10,6 @@ using System.Reflection;
 using Kingmaker;
 using Kingmaker.Utility;
 using Owlcat.Runtime.Core.Logging;
-using ToyBox.Multiclass;
 using ModKit;
 using ModKit.Utility;
 using ToyBox.classes.MainUI;
@@ -26,7 +25,6 @@ namespace ToyBox {
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
         private static string modId;
         public static Settings settings;
-        public static MulticlassMod multiclassMod;
         public static bool Enabled;
         public static bool IsModGUIShown = false;
         public static bool freshlyLaunched = true;
@@ -66,7 +64,6 @@ namespace ToyBox {
                 modEntry.OnSaveGUI = OnSaveGUI;
                 Objects = new List<GameObject>();
                 UI.KeyBindings.OnLoad(modEntry);
-                multiclassMod = new Multiclass.MulticlassMod();
                 HumanFriendly.EnsureFriendlyTypesContainAll();
                 Mod.logLevel = Main.settings.loggingLevel;
             }
