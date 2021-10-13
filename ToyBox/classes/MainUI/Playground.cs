@@ -1,9 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using Kingmaker.Blueprints;
 using ModKit;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using Kingmaker.Blueprints;
+using UnityEngine;
 
 namespace ModKit {
     public static partial class ui {

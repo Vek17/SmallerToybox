@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using UnityEngine;
 
 namespace ModKit {
     public static partial class UI {
@@ -67,8 +67,7 @@ namespace ModKit {
             public override bool Equals(object o) {
                 if (o is KeyBind kb) {
                     return ID == kb.ID && Conflicts(kb);
-                }
-                else
+                } else
                     return false;
             }
             public override int GetHashCode() {

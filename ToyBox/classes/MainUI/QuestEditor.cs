@@ -4,13 +4,12 @@
 //   "Repository": "https://raw.githubusercontent.com/spacehamster/KingmakerKingdomResolutionMod/master/KingdomResolution/Repository.json"
 // Copyright < 2018 > Spacehamster 
 // Copyright < 2021 > Ported version - Narria (github user Cabarius) - License: MIT
-using UnityEngine;
 using HarmonyLib;
-using System;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.AreaLogic.QuestSystem;
 using ModKit;
+using System.Linq;
+using UnityEngine;
 
 namespace ToyBox {
     public static class QuestExensions {

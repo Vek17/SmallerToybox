@@ -1,16 +1,10 @@
 ﻿using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.JsonSystem.EditorDatabase;
 using ModKit;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
-namespace ToyBox { 
+namespace ToyBox {
     public class EtudesTreeModel {
         public List<BlueprintEtude> etudes;
         public NamedTypeFilter<BlueprintEtude> etudeFilter = new("Etudes", null, bp => bp.CollationNames(bp.Parent?.GetBlueprint().NameSafe() ?? ""));

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModKit.Utility;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -6,7 +7,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityModManagerNet;
-using ModKit.Utility;
 
 namespace ModKit {
     public interface IMenuPage {
@@ -122,8 +122,7 @@ namespace ModKit {
                         hasPriorPage = true;
                     }
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Console.Write($"{e}");
                 caughtException = e;
             }

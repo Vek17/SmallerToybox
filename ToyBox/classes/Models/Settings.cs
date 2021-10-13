@@ -1,17 +1,8 @@
 // Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using ModKit.Utility;
-using System.Collections.Generic;
-using UnityModManagerNet;
-using UnityEngine;
 using ModKit;
-using System.Collections;
-using Newtonsoft.Json;
-using Kingmaker.EntitySystem;
-using Kingmaker;
-using Kingmaker.Armies.TacticalCombat.Parts;
-using Kingmaker.UnitLogic.Parts;
-using JetBrains.Annotations;
-using Kingmaker.EntitySystem.Persistence;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityModManagerNet;
 
 namespace ToyBox {
 
@@ -263,7 +254,7 @@ namespace ToyBox {
         // Deprecated
         public bool toggleNoLevelUpRestirctions = false;    // deprecated
         internal bool toggleSpellbookAbilityAlignmentChecks = false;
-        
+
         // Save
         public override void Save(UnityModManager.ModEntry modEntry) => Save(this, modEntry);
 

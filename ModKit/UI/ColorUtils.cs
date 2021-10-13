@@ -50,10 +50,10 @@ namespace ModKit {
 
     public static class ColorUtils {
         public static Color color(this RGBA rga, float adjust = 0) {
-            var red = (float)((long)rga >> 24) / 256f;
-            var green = (float)(0xFF & ((long)rga >> 16)) / 256f;
-            var blue = (float)(0xFF & ((long)rga >> 8)) / 256f;
-            var alpha = (float)(0xFF & ((long)rga)) / 256f;
+            var red = ((long)rga >> 24) / 256f;
+            var green = (0xFF & ((long)rga >> 16)) / 256f;
+            var blue = (0xFF & ((long)rga >> 8)) / 256f;
+            var alpha = (0xFF & ((long)rga)) / 256f;
             var color = new Color(red, green, blue, alpha);
             if (adjust < 0)
                 color = Color.Lerp(color, Color.black, -adjust);

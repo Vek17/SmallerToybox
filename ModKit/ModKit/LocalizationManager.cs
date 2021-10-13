@@ -100,8 +100,7 @@ namespace ModKit {
                     }
                     return files;
                 }
-            }
-            catch {
+            } catch {
             }
             return new string[0];
         }
@@ -141,8 +140,7 @@ namespace ModKit {
 
                     return true;
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 onError(e);
             }
 
@@ -168,8 +166,7 @@ namespace ModKit {
 
                     return true;
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 onError(e);
             }
 

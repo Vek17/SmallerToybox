@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Kingmaker.AreaLogic.Etudes;
+﻿using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using ModKit;
+using System.Collections.Generic;
 
 namespace ToyBox {
-        public class ConflictingGroupIdReferences
-    {
+    public class ConflictingGroupIdReferences {
         public string Name;
         public List<BlueprintGuid> Etudes = new();
     }

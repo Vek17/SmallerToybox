@@ -1,9 +1,6 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using Kingmaker.AreaLogic.Cutscenes;
+using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
@@ -12,21 +9,23 @@ using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
+using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.Blueprints.Quests;
 using Kingmaker.Craft;
+using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Globalmap.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.Utility;
-using Kingmaker.AreaLogic.Etudes;
-using Kingmaker.AreaLogic.Cutscenes;
 using ModKit;
 using ModKit.Utility;
-using Kingmaker.DialogSystem.Blueprints;
-using Kingmaker.Blueprints.Items.Armors;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace ToyBox {
     public class BlueprintBrowser {
@@ -205,7 +204,7 @@ namespace ToyBox {
             if (selectedTypeFilter.collator != null) {
                 collatedBPs = from bp in filtered
                               from key in selectedTypeFilter.collator(bp)
-                              //where selectedTypeFilter.collator(bp).Contains(key) // this line causes a mutation error
+                                  //where selectedTypeFilter.collator(bp).Contains(key) // this line causes a mutation error
                               group bp by key into g
                               orderby g.Key.IntSortKey(), g.Key
                               select g;

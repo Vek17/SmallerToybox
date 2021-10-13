@@ -8,7 +8,6 @@ using Kingmaker.EntitySystem.Entities;
 //using Kingmaker.UI._ConsoleUI.Models;
 //using Kingmaker.UI.RestCamp;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class Selectors {

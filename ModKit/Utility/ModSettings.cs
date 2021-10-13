@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Reflection;
 using static UnityModManagerNet.UnityModManager;
-using System;
 
 namespace ModKit {
     public interface IUpdatableSettings {
@@ -34,8 +34,7 @@ namespace ModKit {
                         //Logger.Log($"read settings: {string.Join(Environment.NewLine, settings)}");
                     }
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Error($"{fileName} resource is not present or is malformed. exception: {e}");
                 settings = new T { };
             }
@@ -45,11 +44,9 @@ namespace ModKit {
                     var userSettings = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
                     userSettings.AddMissingKeys(settings);
                     settings = userSettings;
-                }
-                catch {
+                } catch {
                     Mod.Error("Failed to load user settings. Settings will be rebuilt.");
-                    try { File.Copy(userPath, userConfigFolder + $"{Path.DirectorySeparatorChar}BROKEN_{fileName}", true); }
-                    catch { Mod.Error("Failed to archive broken settings."); }
+                    try { File.Copy(userPath, userConfigFolder + $"{Path.DirectorySeparatorChar}BROKEN_{fileName}", true); } catch { Mod.Error("Failed to archive broken settings."); }
                 }
             }
             File.WriteAllText(userPath, JsonConvert.SerializeObject(settings, Formatting.Indented));

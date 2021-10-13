@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using Kingmaker;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
-using UnityEditor;
+using Kingmaker.Blueprints.Area;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.Designers.EventConditionActionSystem.Conditions;
+using ModKit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Application = UnityEngine.Application;
-using System.Linq;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.Blueprints.JsonSystem.EditorDatabase;
-using ModKit;
-using Kingmaker;
-using Kingmaker.Designers.EventConditionActionSystem.Conditions;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
 
 namespace ToyBox {
     public static class EtudesEditor {
@@ -66,7 +63,7 @@ namespace ToyBox {
                     return;
                 UI.Label("Search");
                 UI.Space(25);
-                UI.ActionTextField(ref searrchTextInput, "Search", (s) => { }, () => { searchText = searrchTextInput;  UpdateSearchResults(); }, UI.Width(200));
+                UI.ActionTextField(ref searrchTextInput, "Search", (s) => { }, () => { searchText = searrchTextInput; UpdateSearchResults(); }, UI.Width(200));
                 UI.Space(25);
                 if (UI.Toggle("Flags Only", ref showOnlyFlagLikes)) ApplyFilter();
                 //UI.Label($"Etude Hierarchy : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[parent].Name)}", UI.AutoWidth());
@@ -260,7 +257,7 @@ namespace ToyBox {
                                         UI.Label(element.GetType().Name.cyan(), UI.Width(250));
                                         UI.Space(25);
                                         UI.Label(element.GetDescription().green());
-                                       
+
                                     }
                                     if (element is StartEtude started) {
                                         DrawEtude(started.Etude.Guid, loadedEtudes[started.Etude.Guid], indent + 2);
@@ -309,7 +306,7 @@ namespace ToyBox {
                 foreach (var entry in loadedEtudes) {
                     var etude = entry.Value;
                     if (etude.Name.ToLower().Contains(searchTextLower)) {
-                       etude.TraverseParents(e => e.hasSearchResults = true);
+                        etude.TraverseParents(e => e.hasSearchResults = true);
                     }
                 }
             }

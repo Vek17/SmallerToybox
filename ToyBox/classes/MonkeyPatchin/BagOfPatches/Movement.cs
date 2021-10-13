@@ -18,7 +18,6 @@ using ModKit;
 using System;
 using System.Linq;
 using UnityEngine;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class Movement {
@@ -45,12 +44,10 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix(UnitEntityData unit, ClickGroundHandler.CommandSettings settings) {
                 var moveAsOne = Main.settings.toggleMoveSpeedAsOne;
                 //Main.Log($"ClickGroundHandler_RunCommand_Patch - isInCombat: {unit.IsInCombat} turnBased:{Game.Instance.Player.IsTurnBasedModeOn()} moveAsOne:{moveAsOne}");
-                if (unit.IsInCombat && Game.Instance.Player.IsTurnBasedModeOn()) return true;
+                if (!moveAsOne || unit.IsInCombat /*&& Game.Instance.Player.IsTurnBasedModeOn()*/) { return true; }
 
-                // As of WoTR 1.03c RunCommand is once again the main place to adjust movement speed.  The following was needed when we used UnitEntityData_CalculateSpeedModifier_Patch above to adjust speed in non move as one cases.  
-                if (!moveAsOne) {
-                    return true;
-                }
+                // As of WoTR 1.03c RunCommand is once again the main place to adjust movement speed.
+                // The following was needed when we used UnitEntityData_CalculateSpeedModifier_Patch above to adjust speed in non move as one cases.  
                 var partTacticalCombat = unit.Get<UnitPartTacticalCombat>();
                 if (partTacticalCombat != null && partTacticalCombat.Faction != ArmyFaction.Crusaders) return true;
 

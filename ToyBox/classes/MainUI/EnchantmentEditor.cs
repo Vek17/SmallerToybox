@@ -1,9 +1,7 @@
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.EntitySystem.Persistence.JsonUtility;
 using Kingmaker.Items;
 using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic.Mechanics;

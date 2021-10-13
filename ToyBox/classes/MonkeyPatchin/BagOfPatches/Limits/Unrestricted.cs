@@ -8,7 +8,6 @@ using Kingmaker.Items;
 using Kingmaker.Kingdom.Settlements;
 using Kingmaker.UnitLogic;
 using System;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class Unrestricted {

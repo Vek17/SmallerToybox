@@ -1,11 +1,4 @@
-﻿using HarmonyLib;
-using Kingmaker;
-using Kingmaker.Assets.Code.UI.Overtip;
-using Kingmaker.UI.MVVM._VM.Party;
-using System;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using Kingmaker.PubSubSystem;
-using UniRx;
+﻿using Kingmaker;
 
 namespace ToyBox.BagOfPatches {
     internal static class PartyView {

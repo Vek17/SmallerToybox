@@ -1,20 +1,12 @@
 ﻿using Kingmaker;
-using Kingmaker.Blueprints.Loot;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Items;
-using Kingmaker.UnitLogic;
 using Kingmaker.Utility;
 using Kingmaker.View.MapObjects;
-using Newtonsoft.Json;
 using Owlcat.Runtime.Core.Utils;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization.Formatters.Binary;
-using UnityEngine;
 
 namespace ToyBox {
     public static class LootHelper {
@@ -50,7 +42,7 @@ namespace ToyBox {
         public static IEnumerable<LootWrapper> GetMassLootFromCurrentArea() {
             List<LootWrapper> lootWrapperList = new();
             var units = Game.Instance.State.Units.All
-                .Where<UnitEntityData>((Func<UnitEntityData, bool>)(u => u.IsInGame && !u.Descriptor.IsPartyOrPet()));
+                .Where<UnitEntityData>(u => u.IsInGame && !u.Descriptor.IsPartyOrPet());
             //.Where<UnitEntityData>((Func<UnitEntityData, bool>)(u => u.IsRevealed && u.IsDeadAndHasLoot));
             foreach (var unitEntityData in units)
                 lootWrapperList.Add(new LootWrapper() {
@@ -71,11 +63,11 @@ namespace ToyBox {
                     )
                     source.Add(interactionLootPart);
             }
-            var collection = source.Distinct<InteractionLootPart>((IEqualityComparer<InteractionLootPart>)new MassLootHelper.LootDuplicateCheck()).Select<InteractionLootPart, LootWrapper>((Func<InteractionLootPart, LootWrapper>)(i => new LootWrapper() {
+            var collection = source.Distinct<InteractionLootPart>(new MassLootHelper.LootDuplicateCheck()).Select<InteractionLootPart, LootWrapper>(i => new LootWrapper() {
                 InteractionLoot = i
-            }));
+            });
             lootWrapperList.AddRange(collection);
-            return (IEnumerable<LootWrapper>)lootWrapperList;
+            return lootWrapperList;
         }
     }
 }

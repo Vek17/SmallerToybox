@@ -1,14 +1,10 @@
 ﻿using HarmonyLib;
 using Kingmaker.Utility;
-using Owlcat.Runtime.Core.Logging;
 using ModKit;
+using Owlcat.Runtime.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityModManagerNet;
-using static UnityModManagerNet.UnityModManager;
 using Logger = UnityModManagerNet.UnityModManager.Logger;
 
 namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
@@ -48,8 +44,8 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
         private static class UberLoggerLogger_ForwardToUnity_Patch {
             private static void Prefix(ref object message) {
                 if (settings.toggleUberLoggerForwardPrefix) {
-                    var message1 = "[UberLogger] " + message as string;
-                    message = message1 as object;
+                    var message1 = "[UberLogger] " + message;
+                    message = message1;
                 }
             }
         }

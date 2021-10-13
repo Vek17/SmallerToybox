@@ -1,6 +1,5 @@
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;

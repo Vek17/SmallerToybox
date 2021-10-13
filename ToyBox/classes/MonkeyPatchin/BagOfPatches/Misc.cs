@@ -2,12 +2,11 @@
 
 using HarmonyLib;
 using JetBrains.Annotations;
-using Owlcat.Runtime.UniRx;
 using Kingmaker;
 using Kingmaker.Achievements;
+using Kingmaker.Achievements.Platforms;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
-using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Weapons;
@@ -22,34 +21,27 @@ using Kingmaker.GameModes;
 using Kingmaker.Items;
 using Kingmaker.RuleSystem;
 using Kingmaker.Settings;
+using Kingmaker.UI._ConsoleUI.CombatStartScreen;
 //using Kingmaker.UI._ConsoleUI.Models;
 using Kingmaker.UI.Common;
+using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
+using Kingmaker.UI.MVVM._PCView.Slots;
+using Kingmaker.UI.MVVM._PCView.Vendor;
+using Kingmaker.UI.MVVM._VM.Common;
+using Kingmaker.UI.MVVM._VM.CounterWindow;
+using Kingmaker.UI.TurnBasedMode;
 //using Kingmaker.UI.RestCamp;
-using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.Utility;
 using Kingmaker.View;
+using ModKit;
+using Owlcat.Runtime.UniRx;
+using Steamworks;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityEngine;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using Steamworks;
-using Kingmaker.Achievements.Platforms;
-using Kingmaker.UI.ServiceWindow;
-using Kingmaker.UI.MVVM._PCView.ServiceWindows.Inventory;
-using Kingmaker.UI.MVVM._PCView.Slots;
-using Kingmaker.UI.MVVM._VM.Common;
-using Kingmaker.UI.MVVM._VM.CounterWindow;
-using Kingmaker.UI.Loot;
-using Kingmaker.UI.MVVM._PCView.Vendor;
-using Kingmaker.UI.TurnBasedMode;
-using Kingmaker.UI._ConsoleUI.CombatStartScreen;
-using Kingmaker.Items.Slots;
-using ModKit;
-using Kingmaker.EntitySystem.Persistence;
 namespace ToyBox.BagOfPatches {
     internal static class Misc {
         public static Settings settings = Main.settings;
@@ -108,7 +100,7 @@ namespace ToyBox.BagOfPatches {
                 //modLogger.Log("AchievementEntity.IsDisabled");
                 if (settings.toggleAllowAchievementsDuringModdedGame) {
                     //modLogger.Log($"AchievementEntity.IsDisabled - {__result}");
-                    __result = Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>((BlueprintAreaPreset)null)?.DlcCampaign != null || !__instance.Data.OnlyMainCampaign && __instance.Data.SpecificDlc != null && Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>((BlueprintAreaPreset)null)?.DlcCampaign != __instance.Data.SpecificDlc?.Get() || (UnityEngine.Object)__instance.Data.MinDifficulty != (UnityEngine.Object)null && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0 || __instance.Data.IronMan && !(bool)(SettingsEntity<bool>)SettingsRoot.Difficulty.OnlyOneSave;
+                    __result = Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>(null)?.DlcCampaign != null || !__instance.Data.OnlyMainCampaign && __instance.Data.SpecificDlc != null && Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>(null)?.DlcCampaign != __instance.Data.SpecificDlc?.Get() || __instance.Data.MinDifficulty != null && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0 || __instance.Data.IronMan && !(bool)(SettingsEntity<bool>)SettingsRoot.Difficulty.OnlyOneSave;
                     // || (Game.Instance.Player.ModsUser || OwlcatModificationsManager.Instance.IsAnyModActive)
                     //modLogger.Log($"AchievementEntity.IsDisabled - {__result}");
                 }
@@ -136,7 +128,7 @@ namespace ToyBox.BagOfPatches {
 
             public static void CheckAndReplace(ref UnitEntityData unitEntityData) {
                 var type = unitEntityData.Blueprint.Type;
-                
+
                 // spider checks
                 if (spidersBegone) {
                     var isASpider = IsSpiderType(type?.AssetGuidThreadSafe);
@@ -176,8 +168,7 @@ namespace ToyBox.BagOfPatches {
                 }
 
                 // retriever checks
-                if(retrieversBegone) 
-                { 
+                if (retrieversBegone) {
                     var isARetriever = IsRetrieverType(type?.AssetGuidThreadSafe);
                     var isAAreshkagelRetriever = IsRetrieverAreshkagelType(type?.AssetGuidThreadSafe);
                     var isOtherRetrieverUnit = IsRetrieverBlueprintUnit(unitEntityData.Blueprint.AssetGuidThreadSafe);
@@ -461,14 +452,14 @@ namespace ToyBox.BagOfPatches {
                 if (EResult.k_EResultOK == pCallback.m_eResult) { }
                 //Debug.Log((object)"StoreStats - success");
                 else if (EResult.k_EResultInvalidParam == pCallback.m_eResult) {
-                    Debug.Log((object)"StoreStats - some failed to validate");
+                    Debug.Log("StoreStats - some failed to validate");
                     __instance.OnUserStatsReceived(new UserStatsReceived_t() {
                         m_eResult = EResult.k_EResultOK,
                         m_nGameID = (ulong)__instance.m_GameId
                     });
                 }
                 else
-                    Debug.Log((object)("StoreStats - failed, " + (object)pCallback.m_eResult));
+                    Debug.Log("StoreStats - failed, " + pCallback.m_eResult);
                 return false;
             }
         }
@@ -527,7 +518,7 @@ namespace ToyBox.BagOfPatches {
                     var item = __instance.Item;
                     Mod.Debug($"InventorySlotPCView_OnClick_Patch - Using {item.Name}");
                     try {
-                        item.TryUseFromInventory(item.GetBestAvailableUser(), (TargetWrapper)UIUtility.GetCurrentCharacter());
+                        item.TryUseFromInventory(item.GetBestAvailableUser(), UIUtility.GetCurrentCharacter());
                     }
                     catch (Exception e) {
                         Mod.Error($"InventorySlotPCView_OnClick_Patch - {e}");

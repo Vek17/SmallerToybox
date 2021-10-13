@@ -3,26 +3,25 @@
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
-using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Prerequisites;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Stats;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
+using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.LevelClassScores.Experience;
+using Kingmaker.UI.ServiceWindow;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
+using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.UI.MVVM._VM.CharGen.Phases.Skills;
-using Kingmaker.UI.MVVM._VM.CharGen.Phases.FeatureSelector;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.CharacterInfo.Sections.LevelClassScores.Experience;
-using Kingmaker.UI.ServiceWindow;
-using UnityEngine;
-using ModKit;
 using System.Reflection;
 using System.Reflection.Emit;
+using UnityEngine;
 
 namespace ToyBox.BagOfPatches {
     internal static class LevelUp {
@@ -82,8 +81,8 @@ namespace ToyBox.BagOfPatches {
                 var nextLevel = data.ExperienceTable.Bonuses[data.CharacterLevel + 1];
                 var currentLevel = data.ExperienceTable.Bonuses[data.CharacterLevel];
                 var experience = data.Experience;
-                __instance.Exp.text = $"{experience as object}/{nextLevel as object}";
-                __instance.Bar.value = (float)(experience - currentLevel) / (float)(nextLevel - currentLevel);
+                __instance.Exp.text = $"{experience}/{nextLevel}";
+                __instance.Bar.value = (experience - currentLevel) / (float)(nextLevel - currentLevel);
             }
         }
 

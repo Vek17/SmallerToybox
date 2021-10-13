@@ -109,19 +109,19 @@ namespace ToyBox.classes.Infrastructure {
                 spellbook.LearnSpellsOnRaiseLevel(oldMaxSpellLevel, newMaxSpellLevel, false);
             }
         }
-        public static void AddIfUnknown(this Spellbook spellbook, int level, BlueprintAbility ability) { 
-            if (!spellbook.IsKnown(ability))spellbook.AddKnown(level, ability); 
+        public static void AddIfUnknown(this Spellbook spellbook, int level, BlueprintAbility ability) {
+            if (!spellbook.IsKnown(ability)) spellbook.AddKnown(level, ability);
         }
 
         public static void AddAllSpellsOfSelectedLevel(Spellbook spellbook, int level) {
             List<BlueprintAbility> toLearn;
             if (Main.settings.showFromAllSpellbooks) {
                 var normal = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
-                    .Where(x => ((BlueprintSpellbook)x).SpellList != null)
-                    .SelectMany(x => ((BlueprintSpellbook)x).SpellList.GetSpells(level));
+                    .Where(x => x.SpellList != null)
+                    .SelectMany(x => x.SpellList.GetSpells(level));
                 var mythic = BlueprintExensions.GetBlueprints<BlueprintSpellbook>()
-                    .Where(x => ((BlueprintSpellbook)x).MythicSpellList != null)
-                    .SelectMany(x => ((BlueprintSpellbook)x).MythicSpellList.GetSpells(level));
+                    .Where(x => x.MythicSpellList != null)
+                    .SelectMany(x => x.MythicSpellList.GetSpells(level));
                 toLearn = normal.Concat(mythic).Distinct().ToList();
             }
             else {
@@ -143,7 +143,7 @@ namespace ToyBox.classes.Infrastructure {
                 AddAllSpellsOfSelectedLevel(selectedSpellbook, PartyEditor.selectedSpellbookLevel);
             }
         }
-        
+
         public static void HandleAddAllSpellsOnPartyEditor(UnitDescriptor unit) {
             if (!PartyEditor.SelectedSpellbook.TryGetValue(unit.HashKey(), out var selectedSpellbook)) {
                 return;

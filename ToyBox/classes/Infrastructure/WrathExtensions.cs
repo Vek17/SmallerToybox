@@ -1,6 +1,4 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using System;
-using UnityEngine;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.EntitySystem.Entities;
@@ -8,11 +6,12 @@ using Kingmaker.UI;
 using Kingmaker.UI.Common;
 //using Kingmaker.UI.LevelUp.Phase;
 using Kingmaker.UnitLogic;
-using Alignment = Kingmaker.Enums.Alignment;
-using ModKit;
 using Kingmaker.UnitLogic.Alignments;
+using ModKit;
+using System;
 using System.Linq;
-using Kingmaker;
+using UnityEngine;
+using Alignment = Kingmaker.Enums.Alignment;
 
 namespace ModKit {
     public partial class UI {

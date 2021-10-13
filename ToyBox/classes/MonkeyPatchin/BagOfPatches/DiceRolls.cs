@@ -10,7 +10,6 @@ using ModKit;
 //using Kingmaker.UI.RestCamp;
 using System;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class DiceRolls {

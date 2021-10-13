@@ -1,9 +1,6 @@
-﻿using ModKit;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ToyBox {
     // This class encapsulates the ability to show GUI for displaying and or editing an object.  Not all editors will actually modify values but they will be included here to keep things simple
@@ -52,7 +49,7 @@ namespace ToyBox {
             editorsForType[type] = existing;
         }
         public static void Register<T>(string name, Editor<T>.MainGUI main, Editor<T>.DetailGUI detail)
-            => Register((Editor)new Editor<T>(name, main, detail));
+            => Register(new Editor<T>(name, main, detail));
         public static void Register<Source, Target>(string name, Editor<Source, Target>.MainGUI main, Editor<Source, Target>.DetailGUI detail) => Register(new Editor<Source, Target>(name, main, detail));
     }
     public class Editor<T> : Editor {

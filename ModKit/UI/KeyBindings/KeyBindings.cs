@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ModKit.Utility;
+using System;
 using System.Collections.Generic;
-using ModKit.Utility;
-using static UnityModManagerNet.UnityModManager;
 using System.Linq;
+using static UnityModManagerNet.UnityModManager;
 
 namespace ModKit {
     public static partial class UI {

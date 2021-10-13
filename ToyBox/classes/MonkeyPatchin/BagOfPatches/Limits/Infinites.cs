@@ -3,7 +3,6 @@ using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints.Items.Equipment;
 //using Kingmaker.Controllers.GlobalMap;
-using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Items;
 using Kingmaker.RuleSystem;
@@ -18,7 +17,6 @@ using Kingmaker.UnitLogic.Class.LevelUp;
 using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using System;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class Infinites {

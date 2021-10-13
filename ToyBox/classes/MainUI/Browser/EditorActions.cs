@@ -1,33 +1,5 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
-using Kingmaker;
-using Kingmaker.AreaLogic.Cutscenes;
-using Kingmaker.AreaLogic.Etudes;
-using Kingmaker.AreaLogic.QuestSystem;
-using Kingmaker.Armies.Blueprints;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Blueprints.Items;
-using Kingmaker.Blueprints.Quests;
-using Kingmaker.Designers;
-using Kingmaker.Designers.EventConditionActionSystem.ContextData;
-using Kingmaker.ElementsSystem;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.EntitySystem.Persistence;
-using Kingmaker.Globalmap.Blueprints;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Abilities.Blueprints;
-using Kingmaker.UnitLogic.ActivatableAbilities;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.Utility;
-using ModKit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace ToyBox {
     public static class EditorActions {
 

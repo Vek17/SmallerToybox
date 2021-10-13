@@ -1,13 +1,12 @@
-﻿using System;
-using HarmonyLib;
-using UnityModManagerNet;
+﻿using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Enums;
-using Kingmaker.UnitLogic.Alignments;
-using UnityEngine;
-using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
+using Kingmaker.UnitLogic.Alignments;
+using Kingmaker.UnitLogic.FactLogic;
 using ModKit;
+using System;
+using UnityEngine;
 
 namespace ToyBox {
     public static class AlignmentPatches {
@@ -47,7 +46,7 @@ namespace ToyBox {
                             return false;
                         }
                         var vector = __instance.m_Vector;
-                        var num = (float)value / 50f;
+                        var num = value / 50f;
                         var directionVector = Traverse.Create(__instance).Method("GetDirection", new object[] { direction }).GetValue<Vector2>();
                         var newAlignment = __instance.m_Vector + directionVector * num;
                         if (newAlignment.magnitude > 1f) {

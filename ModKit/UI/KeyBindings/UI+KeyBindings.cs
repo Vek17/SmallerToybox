@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using System;
-using GL = UnityEngine.GUILayout;
+﻿using System;
 using System.Linq;
+using UnityEngine;
+using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
     public static partial class UI {

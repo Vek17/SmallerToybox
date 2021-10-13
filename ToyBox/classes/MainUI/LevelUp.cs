@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using Kingmaker;
-using Kingmaker.EntitySystem.Entities;
-using ModKit;
+﻿using ModKit;
 
 namespace ToyBox {
     public class LevelUp {
@@ -55,11 +51,11 @@ namespace ToyBox {
                 },
                 () => UI.Toggle("Always Able To Level Up", ref settings.toggleNoLevelUpRestrictions),
                 () => UI.Toggle("Add Full Hit Die Value", ref settings.toggleFullHitdiceEachLevel),
-                (Action)(() => {
-                    UI.Toggle((string)"Ignore Class And Feat Restrictions", ref settings.toggleIgnoreClassAndFeatRestrictions);
+                () => {
+                    UI.Toggle("Ignore Class And Feat Restrictions", ref settings.toggleIgnoreClassAndFeatRestrictions);
                     UI.Space(25);
                     UI.Label("Experimental".cyan() + ": in addition to regular leveling, this allows you to choose any mythic class each time you level up starting from level 1. This may have interesting and unexpected effects. Backup early and often...".green());
-                }),
+                },
                 () => UI.Toggle("Allow Companions to Take Mythic Classes", ref settings.toggleAllowCompanionsToBecomeMythic),
                 () => UI.Toggle("Ignore Prerequisites When Choosing A Feat", ref settings.toggleFeaturesIgnorePrerequisites),
                 () => UI.Toggle("Ignore Caster Type And Spell Level Restrictions", ref settings.toggleIgnoreCasterTypeSpellLevel),

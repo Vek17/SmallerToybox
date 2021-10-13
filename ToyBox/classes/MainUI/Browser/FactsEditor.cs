@@ -1,11 +1,9 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Blueprints.Facts;
+using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
@@ -14,9 +12,11 @@ using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using ModKit;
 using ModKit.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ToyBox.classes.Infrastructure;
-using Kingmaker.EntitySystem;
-using Kingmaker.Blueprints.Facts;
+using UnityEngine;
 
 namespace ToyBox {
     public class FactsEditor {
@@ -232,7 +232,7 @@ namespace ToyBox {
             if (blueprints == null) return;
             OnGUI<Ability>("Abilities", ch, ability,
                 (fact) => fact.Blueprint,
-                BlueprintExensions.GetBlueprints<BlueprintAbility>().Where((bp) => !((BlueprintAbility)bp).IsSpell),
+                BlueprintExensions.GetBlueprints<BlueprintAbility>().Where((bp) => !bp.IsSpell),
                 (fact) => fact.Name,
                 (fact) => fact.Description,
                 (fact) => fact.GetRank(),

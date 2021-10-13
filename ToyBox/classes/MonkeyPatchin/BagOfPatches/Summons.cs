@@ -7,17 +7,16 @@ using Kingmaker.Blueprints;
 //using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.RuleSystem.Rules;
+//using Kingmaker.UI._ConsoleUI.GroupChanger;
+using Kingmaker.UI.ActionBar;
 //using Kingmaker.UI._ConsoleUI.Models;
 //using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
+using ModKit;
 using System;
-//using Kingmaker.UI._ConsoleUI.GroupChanger;
-using Kingmaker.UI.ActionBar;
 using TurnBased.Controllers;
 using UnityEngine;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using ModKit;
 
 namespace ToyBox.BagOfPatches {
     internal static class Summons {
@@ -96,7 +95,7 @@ namespace ToyBox.BagOfPatches {
         internal static class ActionBarManager_CheckTurnPanelView_Patch {
             private static void Postfix(ActionBarManager __instance) {
                 if (settings.toggleMakeSummmonsControllable && CombatController.IsInTurnBasedCombat()) {
-                    Traverse.Create((object)__instance).Method("ShowTurnPanel", Array.Empty<object>()).GetValue();
+                    Traverse.Create(__instance).Method("ShowTurnPanel", Array.Empty<object>()).GetValue();
                 }
             }
         }

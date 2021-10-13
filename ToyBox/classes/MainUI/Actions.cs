@@ -1,21 +1,14 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Armies;
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Classes;
 using Kingmaker.Controllers.Rest;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
-using Kingmaker.Globalmap.State;
 using Kingmaker.Globalmap.View;
 using Kingmaker.Kingdom;
-using Kingmaker.Kingdom.Tasks;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic;
@@ -23,9 +16,13 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.Utility;
 using Kingmaker.View.MapObjects;
-using UnityModManagerNet;
-using ToyBox.BagOfPatches;
 using ModKit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ToyBox.BagOfPatches;
+using UnityEngine;
+using UnityModManagerNet;
 
 namespace ToyBox {
     public static class Actions {
@@ -127,8 +124,8 @@ namespace ToyBox {
             }
         }
         public static void HandleChangeParty() {
-            var partyCharacters = Game.Instance.Player.Party.Select<UnitEntityData, UnitReference>((Func<UnitEntityData, UnitReference>)(u => (UnitReference)u)).ToList<UnitReference>(); ;
-            if ((partyCharacters != null ? (partyCharacters.Select<UnitReference, UnitEntityData>((Func<UnitReference, UnitEntityData>)(r => r.Value)).SequenceEqual<UnitEntityData>((IEnumerable<UnitEntityData>)Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)
+            var partyCharacters = Game.Instance.Player.Party.Select<UnitEntityData, UnitReference>(u => u).ToList<UnitReference>(); ;
+            if ((partyCharacters != null ? (partyCharacters.Select<UnitReference, UnitEntityData>(r => r.Value).SequenceEqual<UnitEntityData>(Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)
                 return;
             GlobalMapView.Instance.ChangePartyOnMap();
         }
@@ -138,7 +135,7 @@ namespace ToyBox {
 
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
                 UnityModManager.UI.Instance.ToggleWindow();
-                EventBus.RaiseEvent<IGroupChangerHandler>((Action<IGroupChangerHandler>)(h => h.HandleCall(new Action(HandleChangeParty), (Action)null, true)));
+                EventBus.RaiseEvent<IGroupChangerHandler>(h => h.HandleCall(new Action(HandleChangeParty), null, true));
             }
         }
         public static void IdentifyAll() {

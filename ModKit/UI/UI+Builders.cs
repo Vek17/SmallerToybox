@@ -1,7 +1,7 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
 using System;
 using System.Linq;
+using UnityEngine;
 using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
@@ -66,8 +66,7 @@ namespace ModKit {
                 var hasTitle = title != null;
                 BeginHorizontal();
                 if (hasTitle) {
-                    if (ii == 0) { Label(title.bold(), Width(150f)); }
-                    else { Space(153); }
+                    if (ii == 0) { Label(title.bold(), Width(150f)); } else { Space(153); }
                 }
                 var filteredActions = actions.Skip(ii).Take(stride);
                 foreach (var action in filteredActions) {

@@ -1,38 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using Kingmaker.AreaLogic.Cutscenes;
-using Kingmaker.AreaLogic.Etudes;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.Blueprints.JsonSystem.EditorDatabase;
-using Kingmaker.Blueprints.JsonSystem.PropertyUtility;
-using Kingmaker.Blueprints.Quests;
-using Kingmaker.Blueprints.Validation;
-using Kingmaker.DialogSystem.Blueprints;
-using Kingmaker.ElementsSystem;
-using Kingmaker.Kingdom.Blueprints;
-using Kingmaker.Utility;
-using UnityEditor;
-using UnityEngine;
 
-namespace ToyBox
-{
-    public class ReferenceGraph
-    {
-        public enum ValidationStateType
-        {
+namespace ToyBox {
+    public class ReferenceGraph {
+        public enum ValidationStateType {
             Normal,
             Warning,
             Error
         }
 
-        public class Entry
-        {
+        public class Entry {
             public string ObjectGuid;
             public string ObjectName;
             public string ObjectType;
@@ -48,14 +25,12 @@ namespace ToyBox
             public ValidationStateType ValidationState;
         }
 
-        public class SceneEntity
-        {
+        public class SceneEntity {
             public string GUID;
             public List<Ref> Refs = new List<Ref>();
         }
 
-        public class Ref
-        {
+        public class Ref {
             public string AssetPath;
             public string AssetType;
             public string ReferencingObjectName;
@@ -73,8 +48,7 @@ namespace ToyBox
 #endif
         }
 
-        public class EntityRef
-        {
+        public class EntityRef {
             public string AssetPath;
             public string AssetName;
             public string UsagesType;

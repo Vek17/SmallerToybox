@@ -5,49 +5,47 @@ using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
+using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Cheats;
 using Kingmaker.Controllers.MapObjects;
 using Kingmaker.Controllers.Rest;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.EntitySystem.Stats;
+using Kingmaker.Enums;
 using Kingmaker.Globalmap;
+using Kingmaker.Items;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Tasks;
 using Kingmaker.Kingdom.UI;
 using Kingmaker.PubSubSystem;
+using Kingmaker.RuleSystem.Rules;
+using Kingmaker.RuleSystem.Rules.Abilities;
+using Kingmaker.Tutorial;
 using Kingmaker.UI.FullScreenUITypes;
 using Kingmaker.UI.Group;
+using Kingmaker.UI.IngameMenu;
 using Kingmaker.UI.Kingdom;
 using Kingmaker.UI.MainMenuUI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
-using Kingmaker.Utility;
-using System;
-using System.Collections.Generic;
-using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using Kingmaker.Tutorial;
-using Kingmaker.RuleSystem.Rules;
-using Kingmaker.UnitLogic.Mechanics.Actions;
-using Kingmaker.UnitLogic.Parts;
+using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
+using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
-using Kingmaker.UI.IngameMenu;
-using System.Reflection;
-using System.Reflection.Emit;
+using Kingmaker.UnitLogic.Mechanics.Actions;
+using Kingmaker.UnitLogic.Parts;
+using Kingmaker.Utility;
 using Kingmaker.View.MapObjects;
 using Owlcat.Runtime.Core.Utils;
-using Kingmaker.Items;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
-using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
+using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
-using Kingmaker.RuleSystem.Rules.Abilities;
-using UnityEngine;
-using Kingmaker.EntitySystem.Stats;
-using Kingmaker.Enums;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace ToyBox.BagOfPatches {
     internal static class Tweaks {
@@ -293,8 +291,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ItemEntityArmor __instance) {
                 if (settings.toggleIgnoreSpeedReduction) {
                     if (__instance.m_Modifiers != null) {
-                        __instance.m_Modifiers.ForEach(delegate (ModifiableValue.Modifier m)
-                        {
+                        __instance.m_Modifiers.ForEach(delegate (ModifiableValue.Modifier m) {
                             ModifiableValue appliedTo = m.AppliedTo;
                             ModifierDescriptor desc = m.ModDescriptor;
                             if (appliedTo == __instance.Wielder.Stats.Speed && (desc == ModifierDescriptor.Shield || desc == ModifierDescriptor.Armor)) {

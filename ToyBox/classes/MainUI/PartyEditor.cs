@@ -1,21 +1,18 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker;
-using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
-using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
-using Alignment = Kingmaker.Enums.Alignment;
 using ModKit;
 using ModKit.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ToyBox.classes.Infrastructure;
-using Kingmaker.PubSubSystem;
-using Kingmaker.Blueprints;
+using UnityEngine;
+using Alignment = Kingmaker.Enums.Alignment;
 
 namespace ToyBox {
     public class PartyEditor {
@@ -330,7 +327,7 @@ namespace ToyBox {
                     UI.Space(10);
                     UI.Div(100, 20, 755);
                     foreach (var obj in HumanFriendly.StatTypes) {
-                        var statType = (StatType)obj;
+                        var statType = obj;
                         var modifiableValue = ch.Stats.GetStat(statType);
                         if (modifiableValue == null) {
                             continue;

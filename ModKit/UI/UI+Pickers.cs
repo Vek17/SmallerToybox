@@ -1,8 +1,8 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
@@ -167,7 +167,7 @@ namespace ModKit {
                 changed = EnumGrid(ref value, xCols, titleFormater, style, options);
             }
             return changed;
-         }
+        }
         public static bool EnumGrid<TEnum>(string title, Func<TEnum> get, Action<TEnum> set, params GUILayoutOption[] options) where TEnum : struct {
             var changed = false;
             using (HorizontalScope()) {
@@ -217,7 +217,7 @@ namespace ModKit {
 
         public static bool GridPicker<T>(
                 string title,
-                ref T selected, 
+                ref T selected,
                 List<T> items,
                 string unselectedTitle,
                 Func<T, string> titler,
@@ -263,8 +263,7 @@ namespace ModKit {
                     selectedItemIndex -= 1;
                 selected = selectedItemIndex >= 0 ? items[selectedItemIndex] : null;
                 //if (changed) Mod.Log($"sel index: {selectedItemIndex} sel: {selected}");
-            }
-            else {
+            } else {
                 UI.Label("No Items".grey(), options);
             }
             return changed;
@@ -277,7 +276,7 @@ namespace ModKit {
                 ref string searchText,
                 int xCols,
                 params GUILayoutOption[] options
-                ) where T : class 
+                ) where T : class
             => GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, xCols, UI.buttonStyle, options);
         public static bool GridPicker<T>(
                 string title,
@@ -286,7 +285,7 @@ namespace ModKit {
                 Func<T, string> titler,
                 ref string searchText,
                 params GUILayoutOption[] options
-                ) where T : class 
+                ) where T : class
             => GridPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, 6, UI.buttonStyle, options);
 
         // VPicker
@@ -318,7 +317,7 @@ namespace ModKit {
                 ref string searchText,
                 Action extras,
                 params GUILayoutOption[] options
-                ) where T : class 
+                ) where T : class
             => VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, extras, UI.buttonStyle, options);
         public static bool VPicker<T>(
                 string title,

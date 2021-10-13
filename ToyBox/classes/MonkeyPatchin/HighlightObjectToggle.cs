@@ -1,18 +1,16 @@
 ﻿// Copyright (c) 2018 fireundubh <fireundubh@gmail.com>
 // This code is licensed under MIT license (see LICENSE for details)
 // Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using System;
 using HarmonyLib;
-using ModKit;
 using Kingmaker;
 using Kingmaker.Controllers.MapObjects;
-using Kingmaker.EntitySystem.Entities;
 using Kingmaker.PubSubSystem;
 using Kingmaker.View;
 using Kingmaker.View.MapObjects;
 using Kingmaker.View.MapObjects.SriptZones;
-using Kingmaker.View.MapObjects.Traps;
+using ModKit;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.Highlighting;
+using System;
 using UnityEngine;
 
 namespace ToyBox.classes.MonkeyPatchin {
@@ -84,7 +82,7 @@ namespace ToyBox.classes.MonkeyPatchin {
 
         private static void Postfix(MapObjectView __instance) {
             var data = __instance.Data;
-            if(data == null) return;
+            if (data == null) return;
 
             var pcc = __instance.GetComponent<PerceptionCheckComponent>();
 
@@ -98,10 +96,12 @@ namespace ToyBox.classes.MonkeyPatchin {
 
                 if (should_highlight) {
                     HighlightOn(__instance);
-                } else {
+                }
+                else {
                     HighlightOff(__instance);
                 }
-            } else {
+            }
+            else {
                 HighlightDestroy(__instance);
             }
         }

@@ -1,9 +1,9 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
 using System;
-using GL = UnityEngine.GUILayout;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using GL = UnityEngine.GUILayout;
 
 namespace ModKit {
     public static partial class UI {
@@ -56,8 +56,7 @@ namespace ModKit {
                         editState = (label, label);
                     }
                 }
-            }
-            else {
+            } else {
                 GUI.SetNextControlName(label);
                 using (HorizontalScope(options)) {
                     TextField(ref editState.Item2, null, MinWidth(minWidth), AutoWidth());
@@ -174,7 +173,7 @@ namespace ModKit {
             if (GL.Button(title, style, options.AddDefaults())) { action(); }
         }
 
-        public static void DangerousActionButton(string title, string warning, ref bool areYouSureState ,Action action, params GUILayoutOption[] options) {
+        public static void DangerousActionButton(string title, string warning, ref bool areYouSureState, Action action, params GUILayoutOption[] options) {
             using (UI.HorizontalScope()) {
                 var areYouSure = areYouSureState;
                 ActionButton(title, () => { areYouSure = !areYouSure; });
@@ -332,13 +331,13 @@ namespace ModKit {
         }
         public static bool Slider(string title, ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
             float fvalue = value;
-            var changed = Slider(title, ref fvalue, min, max, (float)defaultValue, 0, units, options);
+            var changed = Slider(title, ref fvalue, min, max, defaultValue, 0, units, options);
             value = (int)fvalue;
             return changed;
         }
         public static bool Slider(string title, Func<int> get, Action<int> set, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
             float fvalue = get();
-            var changed = Slider(title, ref fvalue, min, max, (float)defaultValue, 0, units, options);
+            var changed = Slider(title, ref fvalue, min, max, defaultValue, 0, units, options);
             if (changed)
                 set((int)fvalue);
             return changed;
@@ -346,7 +345,7 @@ namespace ModKit {
 
         public static bool Slider(ref int value, int min, int max, int defaultValue = 1, string units = "", params GUILayoutOption[] options) {
             float fvalue = value;
-            var changed = Slider(ref fvalue, min, max, (float)defaultValue, 0, units, options);
+            var changed = Slider(ref fvalue, min, max, defaultValue, 0, units, options);
             value = (int)fvalue;
             return changed;
         }

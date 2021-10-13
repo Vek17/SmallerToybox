@@ -1,21 +1,18 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 // based on code by hambeard (thank you ^_^)
+using JetBrains.Annotations;
 using Kingmaker;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.GameModes;
-using Kingmaker.PubSubSystem;
-using Kingmaker.View;
-using System;
-using UnityEngine;
-using JetBrains.Annotations;
 using Kingmaker.Globalmap.Blueprints;
 using Kingmaker.Globalmap.State;
 using Kingmaker.Globalmap.View;
-using Kingmaker.Globalmap;
+using Kingmaker.PubSubSystem;
 using Kingmaker.Utility;
-using Kingmaker.EntitySystem.Persistence;
-using ModKit;
-using UnityModManagerNet;
+using Kingmaker.View;
+using System;
+using UnityEngine;
 
 namespace ToyBox {
     public static class Teleport {
@@ -108,10 +105,10 @@ namespace ToyBox {
                 globalMapController.StartTravels();
                 EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>(h => h.HandleGlobalMapPlayerTravelStarted(globalMapView.State.Player, false));
                 globalMapView.State.Player.SetCurrentPosition(new GlobalMapPosition(destination));
-                globalMapView.GetPointView(destination)?.OpenOutgoingEdges((GlobalMapPointView)null);
+                globalMapView.GetPointView(destination)?.OpenOutgoingEdges(null);
                 globalMapView.UpdatePawnPosition();
                 globalMapController.Stop();
-                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>((Action<IGlobalMapPlayerTravelHandler>)(h => h.HandleGlobalMapPlayerTravelStopped((IGlobalMapTraveler)globalMapView.State.Player)));
+                EventBus.RaiseEvent<IGlobalMapPlayerTravelHandler>(h => h.HandleGlobalMapPlayerTravelStopped(globalMapView.State.Player));
                 globalMapView.PlayerPawn.m_Compass.TryClear();
                 globalMapView.PlayerPawn.m_Compass.TrySet();
 #if false

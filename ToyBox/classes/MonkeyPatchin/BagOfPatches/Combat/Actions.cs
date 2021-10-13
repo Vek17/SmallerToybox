@@ -11,7 +11,6 @@ using Kingmaker.UnitLogic.Commands.Base;
 using System;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using TurnBased.Controllers;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class ACtions {

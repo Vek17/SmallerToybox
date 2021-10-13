@@ -4,15 +4,12 @@ using Kingmaker;
 //using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.RuleSystem.Rules;
 //using Kingmaker.UI._ConsoleUI.Models;
-using Kingmaker.UI.MainMenuUI;
 //using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.FactLogic;
 using ModKit;
-using System;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class MetamagicPatches {
@@ -35,7 +32,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleMetamagicIsFree) {
                     var component = metamagicFeature.GetComponent<AddMetamagicFeat>();
                     if (component == null) {
-                        Mod.Trace(string.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));
+                        Mod.Trace(string.Format("Trying to add metamagic feature without metamagic component: {0}", metamagicFeature));
                     }
                     else {
                         __instance.KnownMetamagics.Add(metamagicFeature);

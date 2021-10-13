@@ -1,17 +1,17 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.RuleSystem;
 using Kingmaker.Utility;
 using ModKit;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Items;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace ToyBox {
     public class BlueprintListUI {
@@ -119,7 +119,7 @@ namespace ToyBox {
                                 float extraSpace = 0;
                                 if (action.isRepeatable) {
                                     actionName += action.isRepeatable ? $" {repeatCount}" : "";
-                                    extraSpace = 20 * (float)Math.Ceiling(Math.Log10((double)repeatCount));
+                                    extraSpace = 20 * (float)Math.Ceiling(Math.Log10(repeatCount));
                                 }
                                 UI.ActionButton(actionName, () => action.action(blueprint, unit, repeatCount, currentCount), UI.Width(160 + extraSpace));
                                 UI.Space(10);
@@ -148,7 +148,7 @@ namespace ToyBox {
                     var attributes = "";
                     if (settings.showAttributes) {
                         var attr = string.Join(" ", blueprint.Attributes());
-                        if (!typeString.Contains(attr)) 
+                        if (!typeString.Contains(attr))
                             attributes = attr;
                     }
 

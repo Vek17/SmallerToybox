@@ -1,10 +1,10 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using ModKit;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ToyBox {
     public class CharacterPicker {

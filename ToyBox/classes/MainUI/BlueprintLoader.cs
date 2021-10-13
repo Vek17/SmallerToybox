@@ -1,12 +1,11 @@
 ﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker.Blueprints;
 using Kingmaker.BundlesLoading;
 using ModKit;
-using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace ToyBox {
     public class BlueprintLoader : MonoBehaviour {
@@ -33,7 +32,7 @@ namespace ToyBox {
                 progress = 0.0f;
                 return;
             }
-            progress = (float)loaded / (float)total;
+            progress = loaded / (float)total;
         }
         private IEnumerator LoadBlueprints() {
             yield return null;

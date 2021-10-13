@@ -11,7 +11,6 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
 using System;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class NewChar {

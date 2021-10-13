@@ -6,7 +6,6 @@ using Kingmaker.Blueprints;
 //using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.Designers;
 using Kingmaker.ElementsSystem;
-using Kingmaker.EntitySystem.Entities;
 using Kingmaker.RuleSystem.Rules;
 using Kingmaker.RuleSystem.Rules.Damage;
 //using Kingmaker.UI._ConsoleUI.Models;
@@ -20,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
-using UnityModManager = UnityModManagerNet.UnityModManager;
 
 namespace ToyBox.BagOfPatches {
     internal static class NoFriendlyFire {

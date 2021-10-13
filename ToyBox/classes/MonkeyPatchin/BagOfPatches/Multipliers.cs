@@ -4,25 +4,24 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
 using Kingmaker.Blueprints.Items;
+using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
 using Kingmaker.Items;
+using Kingmaker.Settings;
+using Kingmaker.Settings.Difficulty;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Parts;
+using Kingmaker.Utility;
 using Kingmaker.View;
+using ModKit;
 using System;
 using System.Linq;
 using UnityEngine;
-using UnityModManager = UnityModManagerNet.UnityModManager;
-using Kingmaker.Settings;
-using Kingmaker.Settings.Difficulty;
-using ModKit;
-using Kingmaker.Blueprints.Items.Ecnchantments;
-using Kingmaker.Utility;
 
 namespace ToyBox.BagOfPatches {
     internal static class Multipliers {
@@ -132,7 +131,7 @@ namespace ToyBox.BagOfPatches {
                 try {
                     if (!caster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {
-                            var adjusted = Math.Max(0, Math.Min((float)long.MaxValue, duration.Value.Ticks * settings.buffDurationMultiplierValue));
+                            var adjusted = Math.Max(0, Math.Min(long.MaxValue, duration.Value.Ticks * settings.buffDurationMultiplierValue));
                             duration = TimeSpan.FromTicks(Convert.ToInt64(adjusted));
                         }
                     }
@@ -156,7 +155,7 @@ namespace ToyBox.BagOfPatches {
                 try {
                     if (!parentContext.MaybeCaster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {
-                            adjusted = Math.Max(0, Math.Min((float)long.MaxValue, duration.Value.Ticks * settings.buffDurationMultiplierValue));
+                            adjusted = Math.Max(0, Math.Min(long.MaxValue, duration.Value.Ticks * settings.buffDurationMultiplierValue));
                             duration = TimeSpan.FromTicks(Convert.ToInt64(adjusted));
                         }
                     }

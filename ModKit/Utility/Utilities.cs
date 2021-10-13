@@ -44,8 +44,7 @@ namespace ModKit {
                 if (part == final) {
                     info.SetValue(obj, value);
                     return value;
-                }
-                else {
+                } else {
                     obj = info.GetValue(obj, null);
                 }
             }
