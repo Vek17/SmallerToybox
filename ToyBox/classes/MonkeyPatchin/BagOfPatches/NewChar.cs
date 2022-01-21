@@ -2,6 +2,7 @@
 
 using HarmonyLib;
 using Kingmaker;
+using Kingmaker.Blueprints.Root;
 //using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
@@ -9,6 +10,7 @@ using Kingmaker.EntitySystem.Stats;
 //using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Class.LevelUp;
+using ModKit;
 using System;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 
@@ -25,13 +27,8 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(UnitDescriptor unit, LevelUpState.CharBuildMode mode, ref LevelUpState __instance, bool isPregen) {
                 if (__instance.IsFirstCharacterLevel) {
                     if (!__instance.IsPregen) {
-                        // Kludge - there is some weirdness where the unit in the character generator does not return IsCustomCharacter() as true during character creation so I have to check the blueprint. The thing is if I actually try to get the blueprint name the game crashes so I do this kludge calling unit.Blueprint.ToString()
-                        var isCustom = unit.Blueprint.ToString() == "CustomCompanion";
-                        //Logger.Log($"unit.Blueprint: {unit.Blueprint.ToString()}");
-                        //Logger.Log($"not pregen - isCust: {isCustom}");
-                        var pointCount = Math.Max(0, isCustom ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer);
+                        var pointCount = Math.Max(0, __instance.m_Unit.IsCustomCompanion() ? settings.characterCreationAbilityPointsMerc : settings.characterCreationAbilityPointsPlayer);
                         //Logger.Log($"points: {pointCount}");
-
                         __instance.StatsDistribution.Start(pointCount);
                     }
                 }

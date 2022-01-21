@@ -37,7 +37,6 @@ using Kingmaker.Utility;
 using Kingmaker.View;
 using ModKit;
 using Owlcat.Runtime.UniRx;
-using Steamworks;
 using System;
 using System.Linq;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
@@ -440,27 +439,6 @@ namespace ToyBox.BagOfPatches {
                         __state = null;
                     }
                 }
-            }
-        }
-
-        // To eliminate some log spam
-        [HarmonyPatch(typeof(SteamAchievementsManager), "OnUserStatsStored", new Type[] { typeof(UserStatsStored_t) })]
-        public static class SteamAchievementsManager_OnUserStatsStored_Patch {
-            public static bool Prefix(ref SteamAchievementsManager __instance, UserStatsStored_t pCallback) {
-                if ((long)(ulong)__instance.m_GameId != (long)pCallback.m_nGameID)
-                    return false;
-                if (EResult.k_EResultOK == pCallback.m_eResult) { }
-                //Debug.Log((object)"StoreStats - success");
-                else if (EResult.k_EResultInvalidParam == pCallback.m_eResult) {
-                    Debug.Log("StoreStats - some failed to validate");
-                    __instance.OnUserStatsReceived(new UserStatsReceived_t() {
-                        m_eResult = EResult.k_EResultOK,
-                        m_nGameID = (ulong)__instance.m_GameId
-                    });
-                }
-                else
-                    Debug.Log("StoreStats - failed, " + pCallback.m_eResult);
-                return false;
             }
         }
 

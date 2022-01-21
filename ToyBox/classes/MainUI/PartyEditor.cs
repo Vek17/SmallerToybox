@@ -174,14 +174,16 @@ namespace ToyBox {
                     UI.Label(distance < 1 ? "" : distance.ToString("0") + "m", UI.Width(75));
                     UI.Space(5);
                     int nextLevel;
-                    for (nextLevel = level; progression.Experience >= xpTable.GetBonus(nextLevel + 1) && xpTable.HasBonusForLevel(nextLevel + 1); nextLevel++) { }
+                    for (nextLevel = level;
+                        nextLevel + 1 < xpTable.Bonuses.Length && progression.Experience >= xpTable.GetBonus(nextLevel + 1) && xpTable.HasBonusForLevel(nextLevel + 1); 
+                        nextLevel++) { }
                     if (nextLevel <= level || !isOnTeam)
                         UI.Label((level < 10 ? "   lvl" : "   lv").green() + $" {level}", UI.Width(90));
                     else
                         UI.Label((level < 10 ? "  " : "") + $"{level} > " + $"{nextLevel}".cyan(), UI.Width(90));
                     // Level up code adapted from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/2
                     if (player.AllCharacters.Contains(ch)) {
-                        if (xpTable.HasBonusForLevel(nextLevel + 1)) {
+                        if (nextLevel + 1 < xpTable.Bonuses.Length && xpTable.HasBonusForLevel(nextLevel + 1)) {
                             UI.ActionButton("+1", () => {
                                 progression.AdvanceExperienceTo(xpTable.GetBonus(nextLevel + 1), true);
                             }, UI.Width(63));

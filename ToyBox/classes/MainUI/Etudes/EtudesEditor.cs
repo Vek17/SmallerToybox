@@ -66,48 +66,9 @@ namespace ToyBox {
                 UI.ActionTextField(ref searrchTextInput, "Search", (s) => { }, () => { searchText = searrchTextInput; UpdateSearchResults(); }, UI.Width(200));
                 UI.Space(25);
                 if (UI.Toggle("Flags Only", ref showOnlyFlagLikes)) ApplyFilter();
-                //UI.Label($"Etude Hierarchy : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[parent].Name)}", UI.AutoWidth());
-                //UI.Label($"H : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[selected].Name)}");
-
-                //if (loadedEtudes.Count != 0) {
-                //    UI.ActionButton("Refresh", () => ReloadEtudes(), UI.AutoWidth());
-                //}
-
-                //if (UI.Button("Update DREAMTOOL Index", UI.MinWidth(300), UI.MaxWidth(300))) {
-                //    ReferenceGraph.CollectMenu();
-                //    etudeChildrenDrawer.ReferenceGraph = ReferenceGraph.Reload();
-                //    etudeChildrenDrawer.ReferenceGraph.AnalyzeReferencesInBlueprints();
-                //    etudeChildrenDrawer.ReferenceGraph.Save();
-                //}
             }
             using (UI.HorizontalScope(GUI.skin.box, UI.AutoWidth())) {
-                //if (etudeChildrenDrawer != null) {
-                //    using (UI.VerticalScope(GUI.skin.box, UI.MinHeight(60),
-                //        UI.MinWidth(300))) {
-                //        etudeChildrenDrawer.DefaultExpandedNodeWidth = UI.Slider("Ширина раскрытия нода", etudeChildrenDrawer.DefaultExpandedNodeWidth, 200, 2000);
-                //    }
-                //}
-
-                //if (etudeChildrenDrawer != null && !etudeChildrenDrawer.BlockersInfo.IsEmpty) {
-                //    using (UI.VerticalScope(GUI.skin.box, UI.MinHeight(60),
-                //        UI.MinWidth(350))) {
-                //        var info = etudeChildrenDrawer.BlockersInfo;
-                //        var lockSelf = info.Blockers.Contains(info.Owner);
-                //        if (lockSelf) {
-                //            UI.Label("Completion блокируется условиями самого этюда");
-                //        }
-
-                //        if (info.Blockers.Count > 1 || !lockSelf) {
-                //            UI.Label("Completion блокируется условиями детей: ");
-                //            foreach (var blocker in info.Blockers) {
-                //                var bluprint = blocker.Blueprint;
-                //                if (UI.Button(bluprint.name)) {
-                //                    Selection.activeObject = BlueprintEditorWrapper.Wrap(bluprint);
-                //                }
-                //            }
-                //        }
-                //    }
-                //}
+                
             }
             var remainingWidth = UI.ummWidth;
             using (UI.HorizontalScope()) {
@@ -146,16 +107,6 @@ namespace ToyBox {
 
                     //m_ScrollPos = scope.scrollPosition;
                 }
-
-                //using (UI.VerticalScope(GUI.skin.box, UI.ExpandWidth(true), UI.ExpandHeight(true))) {
-                //    UI.Label("", UI.ExpandWidth(true), UI.ExpandHeight(true));
-
-                //if (Event.current.type == EventType.Repaint) {
-                //    workspaceRect = GUILayoutUtility.GetLastRect();
-                //    etudeChildrenDrawer?.SetWorkspaceRect(workspaceRect);
-                //}
-                //etudeChildrenDrawer.OnGUI();
-                //}
             }
 #if DEBUG
             UI.ActionButton("Generate Comment Translation Table", () => { });
@@ -204,16 +155,6 @@ namespace ToyBox {
                         }
                         //UI.ActionButton(UI.DisclosureGlyphOff + ">", () => OpenCloseAllChildren(etudeEntry, !etudeEntry.Foldout), GUI.skin.box, UI.AutoWidth());
                         UI.Space(25);
-                        //if (GUILayout.Button("Select", GUI.skin.box, UI.Width(100))) {
-                        //    if (selected != etudeID) {
-                        //        selected = etudeID;
-                        //    }
-                        //    else {
-                        //        parent = etudeID;
-                        //        //etudeChildrenDrawer.SetParent(parent, workspaceRect);
-                        //    }
-                        //    selectedEtude = ResourcesLibrary.TryGetBlueprint<BlueprintEtude>(etudeID);
-                        //}
                         UI.Space(25);
                         if (etude.Blueprint.m_AllElements.Count > 0) {
                             UI.ToggleButton(ref etude.ShowElements, etude.State.ToString().yellow());
@@ -330,16 +271,6 @@ namespace ToyBox {
                     .ToDictionary(t => t, t => filteredEtudes[t]);
             }
         }
-
-        //[MenuItem("CONTEXT/BlueprintEtude/Open in EtudeViewer")]
-        //public static void OpenAssetInEtudeViewer() {
-        //    BlueprintEtude blueprint = BlueprintEditorWrapper.Unwrap<BlueprintEtude>(Selection.activeObject);
-        //    if (blueprint == null)
-        //        return;
-
-        //    EtudeChildrenDrawer.TryToSetParent(blueprint.AssetGuid);
-
-        //}
 
         private static Dictionary<BlueprintGuid, EtudeInfo> GetFlaglikeEtudes() {
             var etudesFlaglike = new Dictionary<BlueprintGuid, EtudeInfo>();
