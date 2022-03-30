@@ -99,7 +99,7 @@ namespace ToyBox.BagOfPatches {
                 //modLogger.Log("AchievementEntity.IsDisabled");
                 if (settings.toggleAllowAchievementsDuringModdedGame) {
                     //modLogger.Log($"AchievementEntity.IsDisabled - {__result}");
-                    __result = Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>(null)?.DlcCampaign != null || !__instance.Data.OnlyMainCampaign && __instance.Data.SpecificDlc != null && Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>(null)?.DlcCampaign != __instance.Data.SpecificDlc?.Get() || __instance.Data.MinDifficulty != null && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0 || __instance.Data.IronMan && !(bool)(SettingsEntity<bool>)SettingsRoot.Difficulty.OnlyOneSave;
+                    __result = Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>(null)?.Campaign != null || !__instance.Data.OnlyMainCampaign && __instance.Data.SpecificCampaign != null && Game.Instance.Player.StartPreset.Or<BlueprintAreaPreset>(null)?.Campaign != __instance.Data.SpecificCampaign?.Get() || __instance.Data.MinDifficulty != null && Game.Instance.Player.MinDifficultyController.MinDifficulty.CompareTo(__instance.Data.MinDifficulty.Preset) < 0 || __instance.Data.IronMan && !(bool)(SettingsEntity<bool>)SettingsRoot.Difficulty.OnlyOneSave;
                     // || (Game.Instance.Player.ModsUser || OwlcatModificationsManager.Instance.IsAnyModActive)
                     //modLogger.Log($"AchievementEntity.IsDisabled - {__result}");
                 }
@@ -422,8 +422,8 @@ namespace ToyBox.BagOfPatches {
                 }
             }
 
-            private static void Postfix(Kingmaker.Items.Slots.ItemSlot __instance, ItemEntity __state) {
-                if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables) {
+            private static void Postfix(Kingmaker.Items.Slots.ItemSlot __instance, ItemEntity __state, bool __result) {
+                if (Game.Instance.CurrentMode == GameModeType.Default && settings.togglAutoEquipConsumables && __result) {
                     if (__state != null) {
                         var blueprint = __state.Blueprint;
                         var item = Game.Instance.Player.Inventory.Items.FindOrDefault(i => i.Blueprint.ItemType == ItemsFilter.ItemType.Usable && i.Blueprint == blueprint);

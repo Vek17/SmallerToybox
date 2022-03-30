@@ -155,6 +155,22 @@ namespace ToyBox {
                 BindableActionButton(PreviewDialogResults);
             });
             Div(0, 25);
+            HStack("Dialog", 1,
+                () => {
+                    Toggle("Expand Dialog To Include Remote Companions".bold(), ref settings.toggleRemoteCompanionDialog);
+                    Space(100);
+                    Label("Experimental".orange() + " Allow remote companions to make comments on dialog you are having.".green());
+                },
+                () => {
+                    if (settings.toggleRemoteCompanionDialog) {
+                        Space(50);
+                        Toggle("Include Former Companions", ref settings.toggleExCompanionDialog);
+                        Space(25);
+                    }
+                },
+                () => { }
+            );
+            Div(0, 25);
             HStack("Quality of Life", 1,
                 () => {
                     Toggle("Allow Achievements While Using Mods", ref settings.toggleAllowAchievementsDuringModdedGame);

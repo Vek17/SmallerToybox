@@ -107,10 +107,10 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
-        [HarmonyPatch(typeof(RulePartySkillCheck), "Success", MethodType.Getter)]
-        public static class RulePartySkillCheck_IsPassed_Patch {
-            private static void Postfix(ref bool __result, RulePartySkillCheck __instance) {
+        //RulePartySkillCheck
+        [HarmonyPatch(typeof(RulePartyStatCheck), "Success", MethodType.Getter)]
+        public static class RulePartyStatCheck_IsPassed_Patch {
+            private static void Postfix(ref bool __result, RulePartyStatCheck __instance) {
                 if (settings.toggleNoFriendlyFireForAOE) {
                     if (__instance.Reason != null) {
                         if (__instance.Reason.Ability != null) {

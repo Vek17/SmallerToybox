@@ -74,6 +74,10 @@
       <HintPath>$(SolutionDir)lib\Owlcat.Runtime.UI_public.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Owlcat.Runtime.Validation">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.Validation.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Owlcat.Runtime.Visual">
       <HintPath>$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll</HintPath>
       <Private>False</Private>
@@ -194,6 +198,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\NoFriendlyFire.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Crusade.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Development.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Dialog.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\DiceRolls.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\LevelUpPatches.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Infinites.cs" />

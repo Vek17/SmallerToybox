@@ -72,6 +72,8 @@ namespace ToyBox {
         public bool toggleAlignmentFix = false;
         public bool togglePreventAlignmentChanges = false;
         public bool toggleBrutalUnfair = false;
+        public bool toggleRemoteCompanionDialog = false;
+        public bool toggleExCompanionDialog = false;
         public bool highlightHiddenObjects = false;
         public bool highlightHiddenObjectsInFog = false;
 
