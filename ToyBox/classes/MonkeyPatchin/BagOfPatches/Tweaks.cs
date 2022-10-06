@@ -374,18 +374,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(MainMenuBoard), "Update")]
-        private static class MainMenuButtons_Update_Patch {
-            private static void Postfix() {
-                if (settings.toggleAutomaticallyLoadLastSave && Main.freshlyLaunched) {
-                    Main.freshlyLaunched = false;
-                    var mainMenuVM = Game.Instance.RootUiContext.MainMenuVM;
-                    mainMenuVM?.EnterGame(new Action(mainMenuVM.LoadLastSave));
-                }
-                Main.freshlyLaunched = false;
-            }
-        }
-
         [HarmonyPatch(typeof(Tutorial), "IsBanned")]
         private static class Tutorial_IsBanned_Patch {
             private static bool Prefix(ref Tutorial __instance, ref bool __result) {
@@ -559,18 +547,6 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleInstantChangeParty && andBack && __result != null) {
                     __result = TimeSpan.Zero;
                 }
-            }
-        }
-
-        [HarmonyPatch(typeof(IngameMenuManager), "OpenGroupManager")]
-        private static class IngameMenuManager_OpenGroupManager_Patch {
-            private static bool Prefix(IngameMenuManager __instance) {
-                if (settings.toggleInstantPartyChange) {
-                    var startChangedPartyOnGlobalMap = __instance.GetType().GetMethod("StartChangedPartyOnGlobalMap", BindingFlags.NonPublic | BindingFlags.Instance);
-                    startChangedPartyOnGlobalMap.Invoke(__instance, new object[] { });
-                    return false;
-                }
-                return true;
             }
         }
 

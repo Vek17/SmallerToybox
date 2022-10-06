@@ -1,10 +1,13 @@
 ﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+using HarmonyLib;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.JsonSystem;
 using Kingmaker.BundlesLoading;
 using ModKit;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ToyBox.classes.MainUI;
 using UnityEngine;
 
 namespace ToyBox {
@@ -13,10 +16,11 @@ namespace ToyBox {
 
         private LoadBlueprintsCallback callback;
         private List<SimpleBlueprint> _blueprintsInProcess;
-        private List<SimpleBlueprint> blueprints;
+        private List<SimpleBlueprint> blueprints => loader.IsDone ? loader.Blueprints : null;
         //private List<SimpleBlueprint> blueprints;
-        public float progress = 0;
+        public float progress => loader.Progress;
         private static BlueprintLoader _shared;
+        private static TestLoader.BlueprintCacheLoader loader = new TestLoader.BlueprintCacheLoader();
         public static BlueprintLoader Shared {
             get {
                 if (_shared == null) {
@@ -27,6 +31,7 @@ namespace ToyBox {
             }
         }
         private IEnumerator coroutine;
+        /*
         private void UpdateProgress(int loaded, int total) {
             if (total <= 0) {
                 progress = 0.0f;
@@ -34,6 +39,7 @@ namespace ToyBox {
             }
             progress = loaded / (float)total;
         }
+        */
         private IEnumerator LoadBlueprints() {
             yield return null;
             var bpCache = ResourcesLibrary.BlueprintsCache;
@@ -58,7 +64,7 @@ namespace ToyBox {
             }
             total = allGUIDs.Count;
             Mod.Log($"Loading {total} Blueprints");
-            UpdateProgress(loaded, total);
+            //UpdateProgress(loaded, total);
             foreach (var guid in allGUIDs) {
                 SimpleBlueprint bp;
                 try {
@@ -70,7 +76,7 @@ namespace ToyBox {
                 }
                 _blueprintsInProcess.Add(bp);
                 loaded += 1;
-                UpdateProgress(loaded, total);
+                //UpdateProgress(loaded, total);
                 if (loaded % 1000 == 0) {
                     yield return null;
                 }
@@ -90,19 +96,16 @@ namespace ToyBox {
                 StopCoroutine(coroutine);
                 coroutine = null;
             }
+            var loader = new TestLoader.BlueprintCacheLoader();
+            loader.Start();
             this.callback = callback;
-            coroutine = LoadBlueprints();
+            //coroutine = loader.WaitFor(UpdateProgress);
             StartCoroutine(coroutine);
+            //blueprints = loader.Blueprints.ToList();
+            callback.Invoke(loader.Blueprints);
         }
-        public bool IsLoading {
-            get {
-                if (coroutine != null) {
-                    return true;
-                }
-                return false;
-            }
-        }
-
+        public bool IsLoading => loader.IsRunning;
+        /*
         public List<SimpleBlueprint> GetBlueprints() {
             if (blueprints == null) {
                 if (BlueprintLoader.Shared.IsLoading) { return null; }
@@ -118,9 +121,34 @@ namespace ToyBox {
             }
             return blueprints;
         }
+        */
+        public List<SimpleBlueprint> GetBlueprints() {
+            if (!loader.IsDone) {
+                if (loader.IsRunning) { return null; }
+                else {
+                    Mod.Debug($"calling BlueprintLoader.Load");
+                    loader.Start();
+                    //BlueprintLoader.Shared.Load((bps) => {
+                    //    _blueprintsInProcess = bps.ToList();
+                    //    blueprints = _blueprintsInProcess;
+                    //    Mod.Debug($"success got {bps.Count()} bluerints");
+                    //});
+                    return null;
+                }
+            }
+            return blueprints;
+        }
         public List<BPType> GetBlueprints<BPType>() {
             var bps = GetBlueprints();
             return bps?.OfType<BPType>().ToList() ?? null;
+        }
+        //[HarmonyPatch(typeof(StartGameLoader), nameof(StartGameLoader.LoadAllJson))]
+        private static class SlientInit {
+            [HarmonyPostfix]
+            static void Postfix() {
+                loader.Start();
+                Mod.Log($"Blueprint Loading Started");
+            }
         }
     }
 

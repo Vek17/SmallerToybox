@@ -194,7 +194,6 @@ namespace ToyBox {
                 },
                 () => Toggle("Make Tutorials Not Appear If Disabled In Settings", ref settings.toggleForceTutorialsToHonorSettings),
                 () => Toggle("Refill consumables in belt slots if in inventory", ref settings.togglAutoEquipConsumables),
-                () => Toggle("Auto Load Last Save On Launch", ref settings.toggleAutomaticallyLoadLastSave),
                 () => Toggle("Allow Shift Click To Use Items In Inventory", ref settings.toggleShiftClickToUseInventorySlot),
                 () => Toggle("Allow Shift Click To Transfer Entire Stack", ref settings.toggleShiftClickToFastTransfer),
                 () => ActionButton("Fix Incorrect Main Character", () => {

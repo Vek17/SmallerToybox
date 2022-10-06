@@ -1,4 +1,5 @@
-﻿using Kingmaker.Blueprints;
+﻿using Kingmaker;
+using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
@@ -58,7 +59,7 @@ namespace ToyBox {
                 if (item != null) {
                     itemRating = 10 * item.Enchantments.Sum((e) => e.Blueprint.EnchantmentCost);
                     //Main.Log($"item enchantValue: {enchantValue}");
-                    var currentCharacter = UIUtility.GetCurrentCharacter();
+                    var currentCharacter = Game.Instance.SelectionCharacter.CurrentSelectedCharacter;
                     var component = bp.GetComponent<CopyItem>();
                     if (component != null && component.CanCopy(item, currentCharacter)) {
                         itemRating = Math.Max(itemRating, 10);

@@ -46,7 +46,6 @@ namespace ToyBox {
         public bool toggleInfiniteItems = false;
         public bool toggleMetamagicIsFree = false;
         public bool toggleMaterialComponent = false;
-        public bool toggleAutomaticallyLoadLastSave = false;
         public bool toggleBlockUnrecruit = false;
         public bool toggleAllowAchievementsDuringModdedGame = false;
         public bool toggleForceTutorialsToHonorSettings = false;
@@ -61,7 +60,6 @@ namespace ToyBox {
         public bool toggleAllowAllActivatable = false;
         public bool toggleKineticistGatherPower = false;
         public bool toggleAlwaysAllowSpellCombat = false;
-        public bool toggleInstantPartyChange = false;
         public bool toggleEnterCombatAutoRage = false;
         public bool toggleEnterCombatAutoRageDemon = false;
         public bool toggleEquipmentNoWeight = false;
