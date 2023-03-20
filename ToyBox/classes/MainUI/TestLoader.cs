@@ -1,8 +1,11 @@
-﻿using Kingmaker.Blueprints;
+﻿using Kingmaker.AreaLogic.Cutscenes;
+using Kingmaker.AreaLogic.Cutscenes.Commands;
+using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.JsonSystem;
 using Kingmaker.Blueprints.JsonSystem.BinaryFormat;
 using Kingmaker.Blueprints.JsonSystem.Converters;
 using Kingmaker.BundlesLoading;
+using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.Modding;
 using Kingmaker.Utility;
 using ModKit;
@@ -176,7 +179,7 @@ namespace ToyBox.classes.MainUI {
                     }
                 }
                 watch.Stop();
-                Mod.Log($"loaded {Loaded} chunks in {watch.ElapsedMilliseconds} milliseconds");
+                Mod.Log($"loaded {Blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
             }
             protected override void ThreadFunction() {
                 var watch = Stopwatch.StartNew();
@@ -204,6 +207,7 @@ namespace ToyBox.classes.MainUI {
                             Thread.Sleep(50);
                         } while (tasks.Any(t => !t.IsCompleted));
                         tasks.ForEach(t => Blueprints.AddRange(t.Result));
+                        /*
                         Parallel.ForEach(Blueprints, bp => {
                             var entry = bpCache.m_LoadedBlueprints[bp.AssetGuid];
                             entry.Blueprint = bp;
@@ -211,14 +215,18 @@ namespace ToyBox.classes.MainUI {
                             //bpCache.AddCachedBlueprint(bp.AssetGuid, bp);
                             OwlcatModificationsManager.Instance.OnResourceLoaded(bp, bp.AssetGuid.ToString(), out obj);
                         });
+                        */
                     }
                 }
                 watch.Stop();
-                Mod.Log($"loaded {Loaded} chunks in {watch.ElapsedMilliseconds} milliseconds");
+                Mod.Log($"loaded {Blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
             }
             protected Task<IEnumerable<SimpleBlueprint>> StartTask(List<BlueprintCacheEntry> entries, byte[] byteBuff) {
+                var DialogNamespace = typeof(BlueprintCue).Namespace;
+                var CutsceneNamespace = typeof(CommandAction).Namespace;
+                var CutsceneCommandsNamespace = typeof(CommandAddFact).Namespace;
                 return Task<IEnumerable<SimpleBlueprint>>.Factory.StartNew(() => {
-                    List<SimpleBlueprint> Blueprints = new List<SimpleBlueprint>();
+                    List<SimpleBlueprint> Blueprints = new List<SimpleBlueprint>(entries.Count());
                     //lock (Blueprints) {
                     var stream = new MemoryStream(byteBuff);
                     var Seralizer = new ReflectionBasedSerializer(new PrimitiveSerializer(new BinaryReader(stream), UnityObjectConverter.AssetList));
@@ -228,14 +236,19 @@ namespace ToyBox.classes.MainUI {
                                 continue;
                             }
                             //using (ProfileScope.New("LoadBlueprint", ctx: null)) {
-                                stream.Seek((long)((ulong)entry.Offset), SeekOrigin.Begin);
-                                SimpleBlueprint simpleBlueprint = null;
-                                Seralizer.Blueprint(ref simpleBlueprint);
-                                if (simpleBlueprint == null) {
-                                    continue;
-                                }
-                                simpleBlueprint.OnEnable();
-                                Blueprints.Add(simpleBlueprint);
+                            stream.Seek(entry.Offset, SeekOrigin.Begin);
+                            Type type = Seralizer.m_Primitive.ReadType();
+                            if (type.Namespace == DialogNamespace) { continue; }
+                            if (type.Namespace == CutsceneNamespace) { continue; }
+                            if (type.Namespace == CutsceneCommandsNamespace) { continue; }
+                            stream.Seek(entry.Offset, SeekOrigin.Begin);
+                            SimpleBlueprint simpleBlueprint = null;
+                            Seralizer.Blueprint(ref simpleBlueprint);
+                            if (simpleBlueprint == null) {
+                                continue;
+                            }
+                            simpleBlueprint.OnEnable();
+                            Blueprints.Add(simpleBlueprint);
                             //}
                         }
                         else {

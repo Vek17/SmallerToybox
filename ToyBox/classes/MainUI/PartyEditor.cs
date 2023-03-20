@@ -4,6 +4,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
 using ModKit;
 using ModKit.Utility;
@@ -198,6 +199,12 @@ namespace ToyBox {
                     else
                         UI.Label((level < 10 ? "  " : "") + $"{mythicLevel} > " + $"{nextML}".cyan(), UI.Width(90));
                     if (player.AllCharacters.Contains(ch)) {
+                        if (progression.MythicExperience > progression.MythicLevel) {
+                            UI.ActionButton("-1", () => {
+                                if (progression.MythicExperience < 1) { return; }
+                                progression.MythicExperience -= 1;
+                            }, UI.Width(63));
+                        }
                         if (progression.MythicExperience < 10) {
                             UI.ActionButton("+1", () => {
                                 progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
