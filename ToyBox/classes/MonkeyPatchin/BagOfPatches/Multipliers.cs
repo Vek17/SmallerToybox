@@ -56,21 +56,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(Spellbook), "GetSpellSlotsCount")]
-        public static class BlueprintSpellsTable_GetCount_Patch {
-            private static void Postfix(ref int __result, Spellbook __instance, int spellLevel) {
-                if (__result > 0 && __instance.Blueprint.IsArcanist) {
-                    var spellsKnown = __instance.m_KnownSpells[spellLevel].Count;
-                    __result = Math.Min(Mathf.RoundToInt(__result * settings.arcanistSpellslotMultiplier), spellsKnown);
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(Spellbook), "GetSpellsPerDay")]
-        private static class Spellbook_GetSpellsPerDay_Patch {
-            private static void Postfix(ref int __result) => __result = Mathf.RoundToInt(__result * (float)Math.Round(settings.spellsPerDayMultiplier, 1));
-        }
-
         [HarmonyPatch(typeof(Player), "GetCustomCompanionCost")]
         public static class Player_GetCustomCompanionCost_Patch {
             public static bool Prefix(ref bool __state) => !__state;    // FIXME - why did Bag of Tricks do this?
@@ -119,97 +104,6 @@ namespace ToyBox.BagOfPatches {
              };
 
         private static bool isGoodBuff(BlueprintBuff blueprint) => !blueprint.Harmful && !badBuffs.Contains(blueprint.AssetGuidThreadSafe);
-
-        [HarmonyPatch(typeof(BuffCollection), "AddBuff", new Type[] {
-            typeof(BlueprintBuff),
-            typeof(UnitEntityData),
-            typeof(TimeSpan?),
-            typeof(AbilityParams)
-            })]
-        public static class BuffCollection_AddBuff_patch {
-            public static void Prefix(BlueprintBuff blueprint, UnitEntityData caster, ref TimeSpan? duration, [CanBeNull] AbilityParams abilityParams = null) {
-                try {
-                    if (!caster.IsPlayersEnemy && isGoodBuff(blueprint)) {
-                        if (duration != null) {
-                            var adjusted = Math.Max(0, Math.Min(long.MaxValue, duration.Value.Ticks * settings.buffDurationMultiplierValue));
-                            duration = TimeSpan.FromTicks(Convert.ToInt64(adjusted));
-                        }
-                    }
-                }
-                catch (Exception e) {
-                    Mod.Error(e);
-                }
-
-                //Mod.Debug("Initiator: " + caster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
-            }
-        }
-
-        [HarmonyPatch(typeof(BuffCollection), "AddBuff", new Type[] {
-            typeof(BlueprintBuff),
-            typeof(MechanicsContext),
-            typeof(TimeSpan?)
-            })]
-        public static class BuffCollection_AddBuff2_patch {
-            public static void Prefix(BlueprintBuff blueprint, MechanicsContext parentContext, ref TimeSpan? duration) {
-                float adjusted = 0;
-                try {
-                    if (!parentContext.MaybeCaster.IsPlayersEnemy && isGoodBuff(blueprint)) {
-                        if (duration != null) {
-                            adjusted = Math.Max(0, Math.Min(long.MaxValue, duration.Value.Ticks * settings.buffDurationMultiplierValue));
-                            duration = TimeSpan.FromTicks(Convert.ToInt64(adjusted));
-                        }
-                    }
-                }
-                catch (Exception e) {
-                    Mod.Error($"BuffCollection_AddBuff2_patch - duration: {duration} - ticks: {duration.Value.Ticks} * {settings.buffDurationMultiplierValue} => {adjusted}");
-                    Mod.Error(e);
-                }
-
-                //Mod.Debug("Initiator: " + parentContext.MaybeCaster.CharacterName + "\nBlueprintBuff: " + blueprint.Name + "\nDuration: " + duration.ToString());
-            }
-        }
-
-        [HarmonyPatch(typeof(ItemEntity), "AddEnchantment", new Type[] {
-            typeof(BlueprintItemEnchantment),
-            typeof(MechanicsContext),
-            typeof(Rounds?)
-            })]
-        public static class ItemEntity_AddEnchantment_Patch {
-            public static void Prefix(BlueprintBuff blueprint, MechanicsContext parentContext, ref Rounds? duration) {
-                try {
-                    if (!parentContext?.MaybeCaster?.IsPlayersEnemy ?? false && isGoodBuff(blueprint)) {
-                        if (duration != null) {
-                            duration = new Rounds((int)(duration.Value.Value * settings.buffDurationMultiplierValue));
-                        }
-                    }
-                }
-                catch (Exception e) {
-                    Mod.Error(e);
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(DifficultyPresetsList), "GetAdjustmentPreset")]
-        public static class DifficultyPresetList_EnemyHpMultiplier_Patch {
-            public static void Postfix(ref DifficultyPresetsList.StatsAdjustmentPreset __result, StatsAdjustmentsType preset) {
-                var hp = preset switch {
-                    StatsAdjustmentsType.ExtraDecline => 0.4f,
-                    StatsAdjustmentsType.StrongDecline => 0.6f,
-                    StatsAdjustmentsType.Decline => 0.8f,
-                    _ => 1f
-                };
-
-                __result.HPMultiplier = hp * settings.enemyBaseHitPointsMultiplier;
-
-                if (settings.toggleBrutalUnfair) {
-                    __result.BasicStatBonusMultiplier = Mathf.RoundToInt(2 * (1 + settings.brutalDifficultyMultiplier));
-                    __result.DerivativeStatBonusMultiplier = Mathf.RoundToInt(2 * (1 + settings.brutalDifficultyMultiplier));
-                    //__result.HPMultiplier = Mathf.RoundToInt(__result.HPMultiplier * settings.brutalDifficultyMultiplier);
-                    __result.AbilityDCBonus = Mathf.RoundToInt(2 * (1 + settings.brutalDifficultyMultiplier));
-                    __result.SkillCheckDCBonus = Mathf.RoundToInt(2 * (1 + settings.brutalDifficultyMultiplier));
-                }
-            }
-        }
 
         [HarmonyPatch(typeof(VendorLogic), "GetItemSellPrice", new Type[] { typeof(ItemEntity) })]
         private static class VendorLogic_GetItemSellPrice_Patch {

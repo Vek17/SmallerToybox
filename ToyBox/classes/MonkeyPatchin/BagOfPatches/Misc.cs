@@ -441,20 +441,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
-        // Turnbased Combat Start Delay
-        [HarmonyPatch(typeof(TurnBasedModeUIController), nameof(TurnBasedModeUIController.ShowCombatStartWindow))]
-        private static class Difficulty_Override_Patch {
-            private static bool Prefix(TurnBasedModeUIController __instance) {
-                if (settings.turnBasedCombatStartDelay == 4f) return true;
-                if (__instance.m_CombatStartWindowVM == null) {
-                    __instance.m_CombatStartWindowVM = new CombatStartWindowVM(new Action(__instance.HideCombatStartWindow));
-                    __instance.m_Config.CombatStartWindowView.Bind(__instance.m_CombatStartWindowVM);
-                    object p = DelayedInvoker.InvokeInTime(new Action(__instance.HideCombatStartWindow), settings.turnBasedCombatStartDelay, true);
-                }
-                return false;
-            }
-        }
         // Shift + Click Inventory Tweaks
         [HarmonyPatch(typeof(CommonVM), nameof(CommonVM.HandleOpen), new Type[] {
             typeof(CounterWindowType), typeof(ItemEntity), typeof(Action<int>)

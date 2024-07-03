@@ -135,7 +135,6 @@ namespace ToyBox {
         public float vendorSellPriceMultiplier = 1;
         public float vendorBuyPriceMultiplier = 1;
         public float fatigueHoursModifierMultiplier = 1;
-        public float spellsPerDayMultiplier = 1;
         public float partyMovementSpeedMultiplier = 1;
         public float travelSpeedMultiplier = 1;
         public int characterCreationAbilityPointsMax = 18;
@@ -145,16 +144,12 @@ namespace ToyBox {
         public float companionCostMultiplier = 1;
         public float kingdomBuildingTimeModifier = 0;
         public float enemyBaseHitPointsMultiplier = 1;
-        public float buffDurationMultiplierValue = 1;
         public float fovMultiplier = 1;
         public float fovMultiplierCutScenes = 1;
         public float fovMultiplierMax = 1.25f;
         public float timeScaleMultiplier = 1;
         public float alternateTimeScaleMultiplier = 3;
         public bool useAlternateTimeScaleMultiplier = false;
-        public float arcanistSpellslotMultiplier = 1;
-        public float brutalDifficultyMultiplier = 1;
-        public float turnBasedCombatStartDelay = 4;
 
         // Dice Rolls
         public UnitSelectType allAttacksHit = UnitSelectType.Off;

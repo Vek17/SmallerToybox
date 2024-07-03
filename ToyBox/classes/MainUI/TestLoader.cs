@@ -1,4 +1,5 @@
-﻿using Kingmaker.AreaLogic.Cutscenes;
+﻿using Epic.OnlineServices;
+using Kingmaker.AreaLogic.Cutscenes;
 using Kingmaker.AreaLogic.Cutscenes.Commands;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.JsonSystem;
@@ -17,9 +18,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using static AkMIDIEvent;
 using static Kingmaker.Blueprints.JsonSystem.BlueprintsCache;
@@ -194,16 +197,17 @@ namespace ToyBox.classes.MainUI {
                         bpCache.m_PackFile.Seek(0U, SeekOrigin.Begin);
                         bpCache.m_PackFile.CopyTo(memStream);
                         var byteBuffer = memStream.GetBuffer();
-                        var chunks = SplitList(entries, 500);
+                        var chunks = SplitList(PreFilter(entries, byteBuffer), 100);
                         var tasks = new List<Task<IEnumerable<SimpleBlueprint>>>();
                         Total = chunks.Count();
+                        //int taskNumber = 0;
+                        var factory = new TaskFactory(TaskScheduler.Default);
                         foreach (var chunk in chunks) {
-                            tasks.Add(StartTask(chunk, byteBuffer));
+                            tasks.Add(StartTask(chunk, byteBuffer, factory));
                         }
                         //Task.WaitAll(tasks.ToArray());
                         do {
                             UpdateProgress(Loaded, Total);
-                            //Mod.Log($"Count: {tasks.Count(t => t.IsCompleted)} of {Total}");
                             Thread.Sleep(50);
                         } while (tasks.Any(t => !t.IsCompleted));
                         tasks.ForEach(t => Blueprints.AddRange(t.Result));
@@ -221,26 +225,104 @@ namespace ToyBox.classes.MainUI {
                 watch.Stop();
                 Mod.Log($"loaded {Blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
             }
-            protected Task<IEnumerable<SimpleBlueprint>> StartTask(List<BlueprintCacheEntry> entries, byte[] byteBuff) {
+            protected void ThreadFunctionThreads() {
+                var watch = Stopwatch.StartNew();
+                var bpCache = ResourcesLibrary.BlueprintsCache;
+                if (bpCache == null) { return; }
+                lock (bpCache) {
+                    lock (Blueprints) {
+                        var toc = bpCache.m_LoadedBlueprints;
+                        //Total = toc.Count();
+                        var entries = toc.Values.OrderBy(v => v.Offset).ToList();
+                        var memStream = new MemoryStream();
+                        bpCache.m_PackFile.Seek(0U, SeekOrigin.Begin);
+                        bpCache.m_PackFile.CopyTo(memStream);
+                        var byteBuffer = memStream.GetBuffer();
+                        entries = PreFilter(entries, byteBuffer);
+                        int workerThreads;
+                        int completionPortThreads;
+                        ThreadPool.GetMaxThreads(out workerThreads, out completionPortThreads);
+                        var chunks = SplitList(entries, entries.Count() / Math.Max(1, workerThreads - 1));
+                        var threads = new List<ConcurentLoaderThread>();
+                        Total = chunks.Count();
+                        //int taskNumber = 0;
+                        foreach (var chunk in chunks) {
+                            threads.Add(StartThread(chunk, byteBuffer));
+                        }
+                        //Task.WaitAll(tasks.ToArray());
+                        do {
+                            UpdateProgress(threads.Where(t => t.Completed).Count(), Total);
+                            Mod.Log($"Threads Complete: {threads.Where(t => t.Completed).Count()}:{Total} - {watch.ElapsedMilliseconds}ms");
+                            Thread.Sleep(50);
+                        } while (threads.Any(t => !t.Completed));
+                        threads.ForEach(t => Blueprints.AddRange(t.Result));
+                        /*
+                        Parallel.ForEach(Blueprints, bp => {
+                            var entry = bpCache.m_LoadedBlueprints[bp.AssetGuid];
+                            entry.Blueprint = bp;
+                            System.Object obj;
+                            //bpCache.AddCachedBlueprint(bp.AssetGuid, bp);
+                            OwlcatModificationsManager.Instance.OnResourceLoaded(bp, bp.AssetGuid.ToString(), out obj);
+                        });
+                        */
+                    }
+                }
+                watch.Stop();
+                Mod.Log($"loaded {Blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
+            }
+            
+            private List<BlueprintCacheEntry> PreFilter(List<BlueprintCacheEntry> entries, byte[] byteBuff) {
+                Mod.Log($"Performing PreFilter");
                 var DialogNamespace = typeof(BlueprintCue).Namespace;
                 var CutsceneNamespace = typeof(CommandAction).Namespace;
                 var CutsceneCommandsNamespace = typeof(CommandAddFact).Namespace;
-                return Task<IEnumerable<SimpleBlueprint>>.Factory.StartNew(() => {
+
+                List<BlueprintCacheEntry> Filtered = new List<BlueprintCacheEntry>();
+
+                var stream = new MemoryStream(byteBuff);
+                var primitiveSerializer = new PrimitiveSerializer(new BinaryReader(stream), UnityObjectConverter.AssetList);
+                var Seralizer = new ReflectionBasedSerializer(primitiveSerializer);
+                foreach (var entry in entries) {
+                    if (entry.Blueprint == null) {
+                        if (entry.Offset == 0U) {
+                            continue;
+                        }
+                        stream.Seek(entry.Offset, SeekOrigin.Begin);
+                        Type type = Seralizer.m_Primitive.ReadType();
+                        if (type.Namespace == DialogNamespace) { continue; }
+                        if (type.Namespace == CutsceneNamespace) { continue; }
+                        if (type.Namespace == CutsceneCommandsNamespace) { continue; }
+                        Filtered.Add(entry);
+                        //}
+                    }
+                    else {
+                        Filtered.Add(entry);
+                    }
+                }
+                return Filtered;
+            }
+            protected Task<IEnumerable<SimpleBlueprint>> StartTask(List<BlueprintCacheEntry> entries, byte[] byteBuff, TaskFactory factory) {
+                //var DialogNamespace = typeof(BlueprintCue).Namespace;
+                //var CutsceneNamespace = typeof(CommandAction).Namespace;
+                //var CutsceneCommandsNamespace = typeof(CommandAddFact).Namespace;
+                return factory.StartNew<IEnumerable<SimpleBlueprint>>(() => {
+                    //var watch = Stopwatch.StartNew();
                     List<SimpleBlueprint> Blueprints = new List<SimpleBlueprint>(entries.Count());
                     //lock (Blueprints) {
                     var stream = new MemoryStream(byteBuff);
-                    var Seralizer = new ReflectionBasedSerializer(new PrimitiveSerializer(new BinaryReader(stream), UnityObjectConverter.AssetList));
+                    var primitiveSerializer = new PrimitiveSerializer(new BinaryReader(stream), UnityObjectConverter.AssetList);
+                    var Seralizer = new ReflectionBasedSerializer(primitiveSerializer);
                     foreach (var entry in entries) {
                         if (entry.Blueprint == null) {
                             if (entry.Offset == 0U) {
                                 continue;
                             }
                             //using (ProfileScope.New("LoadBlueprint", ctx: null)) {
-                            stream.Seek(entry.Offset, SeekOrigin.Begin);
-                            Type type = Seralizer.m_Primitive.ReadType();
-                            if (type.Namespace == DialogNamespace) { continue; }
-                            if (type.Namespace == CutsceneNamespace) { continue; }
-                            if (type.Namespace == CutsceneCommandsNamespace) { continue; }
+                            //stream.Seek(entry.Offset, SeekOrigin.Begin);
+                            //Type type = Seralizer.m_Primitive.ReadType();
+                            //if (type.Namespace == DialogNamespace) { continue; }
+                            //if (type.Namespace == CutsceneNamespace) { continue; }
+                            //if (type.Namespace == CutsceneCommandsNamespace) { continue; }
                             stream.Seek(entry.Offset, SeekOrigin.Begin);
                             SimpleBlueprint simpleBlueprint = null;
                             Seralizer.Blueprint(ref simpleBlueprint);
@@ -253,12 +335,22 @@ namespace ToyBox.classes.MainUI {
                         }
                         else {
                             Blueprints.Add(entry.Blueprint);
-                        } 
+                        }
                     }
                     Interlocked.Increment(ref Loaded);
                     //}
+                    //watch.Stop();
+                    //Mod.Log($"TASK LOADED {Blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
                     return Blueprints;
                 });
+            }
+            protected ConcurentLoaderThread StartThread(List<BlueprintCacheEntry> entries, byte[] byteBuff) {
+                //var DialogNamespace = typeof(BlueprintCue).Namespace;
+                //var CutsceneNamespace = typeof(CommandAction).Namespace;
+                //var CutsceneCommandsNamespace = typeof(CommandAddFact).Namespace;
+                ConcurentLoaderThread Thread = new (entries, byteBuff);
+                Thread.Start();
+                return Thread;
             }
             private  static IEnumerable<List<T>> SplitList<T>(List<T> bigList, int nSize = 1000) {
                 int i = 0;
@@ -284,6 +376,59 @@ namespace ToyBox.classes.MainUI {
                     return;
                 }
                 Progress = loaded / (float)total;
+            }
+        }
+        public class ConcurentLoaderThread {
+            public readonly Thread Job;
+            public bool HasStarted;
+            public bool Completed => HasStarted && !Job.IsAlive;
+            public IEnumerable<SimpleBlueprint> Result => !HasStarted || Job.IsAlive ? null : result;
+            private List<SimpleBlueprint> result = new();
+            public ConcurentLoaderThread(List<BlueprintCacheEntry> entries, byte[] byteBuff) {
+                Job = new Thread(() => {
+                    //var watch = Stopwatch.StartNew();
+                    List<SimpleBlueprint> Blueprints = new List<SimpleBlueprint>(entries.Count());
+                    //lock (Blueprints) {
+                    var stream = new MemoryStream(byteBuff);
+                    var primitiveSerializer = new PrimitiveSerializer(new BinaryReader(stream), UnityObjectConverter.AssetList);
+                    var Seralizer = new ReflectionBasedSerializer(primitiveSerializer);
+                    foreach (var entry in entries) {
+                        if (entry.Blueprint == null) {
+                            if (entry.Offset == 0U) {
+                                continue;
+                            }
+                            //using (ProfileScope.New("LoadBlueprint", ctx: null)) {
+                            //stream.Seek(entry.Offset, SeekOrigin.Begin);
+                            //Type type = Seralizer.m_Primitive.ReadType();
+                            //if (type.Namespace == DialogNamespace) { continue; }
+                            //if (type.Namespace == CutsceneNamespace) { continue; }
+                            //if (type.Namespace == CutsceneCommandsNamespace) { continue; }
+                            stream.Seek(entry.Offset, SeekOrigin.Begin);
+                            SimpleBlueprint simpleBlueprint = null;
+                            Seralizer.Blueprint(ref simpleBlueprint);
+                            if (simpleBlueprint == null) {
+                                continue;
+                            }
+                            object obj;
+                            OwlcatModificationsManager.Instance.OnResourceLoaded(simpleBlueprint, simpleBlueprint.AssetGuid.ToString(), out obj);
+                            simpleBlueprint = (obj as SimpleBlueprint) ?? simpleBlueprint;
+                            simpleBlueprint.OnEnable();
+                            Blueprints.Add(simpleBlueprint);
+                            //}
+                        }
+                        else {
+                            Blueprints.Add(entry.Blueprint);
+                        }
+                    }
+                    //}
+                    //watch.Stop();
+                    //Mod.Log($"TASK LOADED {Blueprints.Count} blueprints in {watch.ElapsedMilliseconds} milliseconds");
+                    result = Blueprints;
+                });
+            }
+            public void Start() {
+                HasStarted = true;
+                Job.Start();
             }
         }
         public class BlueprintCacheLoader2 : ThreadedJob {

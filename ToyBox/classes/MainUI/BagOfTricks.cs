@@ -230,55 +230,6 @@ namespace ToyBox {
                         Div(0, 25, 1280);
                     }
                 },
-                () => Slider("Turn Based Combat Delay", ref settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", Width(450)),
-                () => {
-                    using (VerticalScope()) {
-
-                        using (HorizontalScope()) {
-                            using (VerticalScope()) {
-                                Div(0, 25, 1280);
-                                if (Toggle("Enable Brutal Unfair Difficulty", ref settings.toggleBrutalUnfair)) {
-                                    EventBus.RaiseEvent<IDifficultyChangedClassHandler>(h => {
-                                        h.HandleDifficultyChanged();
-                                        Main.SetNeedsResetGameUI();
-                                    });
-                                }
-                                Space(15);
-                                Label("This allows you to play with the originally released Unfair difficulty. ".green() + "Note:".orange().bold() + "This Unfair difficulty was bugged and applied the intended difficulty modifers twice. ToyBox allows you to keep playing at this Brutal difficulty level and beyond.  Use the slider below to select your desired Brutality Level".green(), Width(1200));
-                                Space(15);
-                                using (HorizontalScope()) {
-                                    if (Slider("Brutality Level", ref settings.brutalDifficultyMultiplier, 1f, 8f, 2f, 1, "", Width(450))) {
-                                        EventBus.RaiseEvent<IDifficultyChangedClassHandler>(h => {
-                                            h.HandleDifficultyChanged();
-                                            Main.SetNeedsResetGameUI();
-                                        });
-                                    }
-                                    Space(25);
-                                    var brutaltiy = settings.brutalDifficultyMultiplier;
-                                    string label;
-                                    var suffix = Math.Abs(brutaltiy - Math.Floor(brutaltiy)) <= float.Epsilon ? "" : "+";
-                                    switch (brutaltiy) {
-                                        case float level when level < 2.0:
-                                            label = $"Unfair{suffix}".Rarity(RarityType.Common);
-                                            break;
-                                        case float level when level < 3.0:
-                                            label = $"Brutal{suffix}";
-                                            break;
-                                        default:
-                                            var rarity = (RarityType)brutaltiy;
-                                            label = $"{rarity}{suffix}".Rarity(rarity);
-                                            break;
-                                    }
-                                    using (VerticalScope(AutoWidth())) {
-                                        Space(UnityModManager.UI.Scale(3));
-                                        Label(label.bold(), largeStyle, AutoWidth());
-                                    }
-                                }
-                                Space(-10);
-                            }
-                        }
-                    }
-                },
             () => { }
             );
             Div(0, 25);
@@ -354,8 +305,6 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Class Specific", 1,
                 () => Slider("Kineticist: Burn Reduction", ref settings.kineticistBurnReduction, 0, 30, 1, "", AutoWidth()),
-                        () => Slider("Arcanist: Spell Slot Multiplier", ref settings.arcanistSpellslotMultiplier, 0.5f, 10f,
-                                1f, 1, "", AutoWidth()),
                         () => {
                             Space(25);
                             Label("Please rest after adjusting to recalculate your spell slots.".green());
@@ -375,7 +324,6 @@ namespace ToyBox {
                 () => LogSlider("Vendor Sell Price", ref settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => LogSlider("Vendor Buy Price", ref settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => Slider("Increase Carry Capacity", ref settings.encumberanceMultiplier, 1, 100, 1, "", AutoWidth()),
-                () => LogSlider("Spells Per Day", ref settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => {
                     LogSlider("Movement Speed", ref settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
                     Space(25);
@@ -395,7 +343,6 @@ namespace ToyBox {
 
                 },
                 () => LogSlider("Enemy HP Multiplier", ref settings.enemyBaseHitPointsMultiplier, 0.1f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Buff Duration", ref settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
                 () => LogSlider("Field Of View", ref settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                 () => LogSlider("FoV (Cut Scenes)", ref settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                 () => { }
